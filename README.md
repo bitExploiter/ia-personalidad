@@ -221,6 +221,54 @@ deploy que un `undefined` silencioso en producción a las 3 AM.
 
 ---
 
+## Workflow de desarrollo — OpenSpec (OPSX)
+
+El desarrollo sigue la metodología **[OpenSpec](https://github.com/Fission-AI/OpenSpec)**
+con el flujo **OPSX**: cada tarea se define en un *change* pequeño y focalizado
+antes de escribir código. Contexto acotado para la IA → resultados más precisos
+→ menos iteraciones.
+
+### Ciclo por tarea
+
+```
+/opsx:explore → /opsx:propose → /opsx:apply → verificar → commit → /opsx:archive
+```
+
+| Paso | Comando | Qué pasa |
+|------|---------|----------|
+| 1 | `/opsx:explore` | Investigar el área del codebase antes de proponer nada |
+| 2 | `/opsx:propose` | Crear el change con artefactos: proposal, specs, design, tasks |
+| 3 | `/opsx:apply` | Ejecutar las tasks del change contra el código |
+| 4 | Verificar | Comprobar resultado (visual, curl, tests) |
+| 5 | Commit | Commit semántico por capa lógica |
+| 6 | `/opsx:archive` | Archivar el change completado |
+
+### Cuándo usar OpenSpec vs conversación directa
+
+| Situación | Usar |
+|-----------|------|
+| Feature nuevo | OpenSpec (explore + propose + apply) |
+| Bug fix simple, 1-2 archivos | Conversación directa |
+| Refactor de módulo completo | OpenSpec — el scope acotado es crítico |
+| Pregunta o explicación | Conversación directa |
+| Feature que toca múltiples dominios | OpenSpec — dividir en varios changes |
+| Typo, renombrar variable | Conversación directa |
+
+### Comandos adicionales
+
+| Comando | Cuándo usarlo |
+|---------|---------------|
+| `/opsx:verify` | Validar que la implementación coincide con los artefactos |
+| `/opsx:ff` | Crear todos los artefactos de planificación de golpe |
+| `/opsx:continue` | Crear artefactos uno por uno (control granular) |
+| `/opsx:bulk-archive` | Archivar varios changes completados a la vez |
+| `/opsx:onboard` | Tutorial guiado para aprender el workflow |
+
+> Ver [IA/openspec.md](IA/openspec.md) para la referencia completa de integración
+> con las convenciones del proyecto.
+
+---
+
 ## Git workflow y Deployment
 
 ### Ramas

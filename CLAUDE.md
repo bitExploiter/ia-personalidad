@@ -126,6 +126,7 @@ Leer **solo el archivo relevante** para la tarea en curso — no cargar todos.
 |-------------------------|--------------------------------------------------------------|
 | Go                      | [IA/go.md](IA/go.md)                                         |
 | GORM (ORM)              | [IA/gorm.md](IA/gorm.md)                                     |
+| Python (auxiliar)       | [IA/python.md](IA/python.md)                                 |
 | React 19                | [IA/react.md](IA/react.md)                                   |
 | Zustand                 | [IA/zustand.md](IA/zustand.md)                               |
 | React Hook Form + Zod   | [IA/react-hook-form.md](IA/react-hook-form.md)               |

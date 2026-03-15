@@ -61,10 +61,13 @@ chore/upgrade-dependencies
 
 **Reglas:**
 
-- `main` (o `master`) es siempre deployable. Nunca commitear directo.
-- `develop` como rama de integración si el equipo trabaja con Gitflow.
+- `main` es producción. Siempre deployable. Nunca commitear directo.
+- `testing` es el entorno de pruebas. Recibe PRs desde ramas de feature/fix.
+- Las ramas de trabajo (`feat/`, `fix/`, etc.) se crean **desde `testing`** y
+  se mergean **a `testing`**. De `testing` se promueve a `main` vía PR.
 - Ramas cortas — idealmente un feature o fix por rama.
 - Eliminar la rama después del merge.
+- Ver [deployment.md](deployment.md) para el flujo completo de CD.
 
 ---
 
@@ -129,10 +132,8 @@ Todo proyecto debe tener al menos este pipeline:
 name: CI
 
 on:
-  push:
-    branches: [main, develop]
   pull_request:
-    branches: [main, develop]
+    branches: [testing, main]
 
 jobs:
   check:
@@ -158,20 +159,27 @@ jobs:
 - Agregar `type-check` (`tsc --noEmit`) como step separado del build.
 - Cachear dependencias siempre (`cache: 'npm'` o equivalente).
 - Secrets nunca en el código — siempre en **GitHub Secrets** o **Environments**.
-- Para deploys: usar **Environments** con protección de rama en producción
-  (requiere approval manual antes de deployar a prod).
+- Para deploys: ver [deployment.md](deployment.md) para el pipeline completo
+  de CD con entornos de testing y producción.
 
 ---
 
 ## Protección de ramas
 
-Configurar en **Settings → Branches** para `main`:
+### `main` (producción)
 
 - ✅ Require pull request before merging
 - ✅ Require approvals (mínimo 1)
 - ✅ Require status checks to pass (CI)
 - ✅ Require branches to be up to date
 - ✅ Do not allow bypassing the above settings
+
+### `testing`
+
+- ✅ Require pull request before merging
+- ✅ Require status checks to pass (CI)
+- ✅ Require branches to be up to date
+- ❌ No require approvals (agiliza el ciclo de testing)
 
 ---
 

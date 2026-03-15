@@ -123,3 +123,4 @@ Leer **solo el archivo relevante** para la tarea en curso — no cargar todos.
 | Testing                 | [IA/testing.md](IA/testing.md)                                |
 | Logging / Observabilidad| [IA/logging.md](IA/logging.md)                                |
 | Configuración           | [IA/config.md](IA/config.md)                                  |
+| Deployment (CD)         | [IA/deployment.md](IA/deployment.md)                          |

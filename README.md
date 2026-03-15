@@ -50,7 +50,8 @@ contexto.
 | Tecnología | Propósito |
 |------------|-----------|
 | **Docker** | Contenedores — multi-stage builds, un servicio por container |
-| **GitHub Actions** | CI/CD — lint, type-check, test, build |
+| **GitHub Actions** | CI: lint, type-check, test, build. CD: deploy automático |
+| **GitHub Environments** | Testing (auto-deploy) + Production (approval manual) |
 | **GitHub** | Repositorio, PRs, protección de ramas |
 
 ---
@@ -76,7 +77,8 @@ CLAUDE-config/
     ├── error-handling.md      → Errores: tipados (Go), boundaries (React), propagación
     ├── testing.md             → Testing: pirámide, herramientas, qué testear
     ├── logging.md             → Logs: slog, niveles, qué loguear, correlación
-    └── config.md              → Configuración: env vars, validación, fail fast
+    ├── config.md              → Configuración: env vars, validación, fail fast
+    └── deployment.md          → CD: testing/production servers, workflows, rollback
 ```
 
 ---
@@ -218,13 +220,36 @@ deploy que un `undefined` silencioso en producción a las 3 AM.
 
 ---
 
-## Git workflow
+## Git workflow y Deployment
+
+### Ramas
+
+```
+feat/xyz ──PR──► testing ──PR──► main
+                    │                │
+                CI + Tests       CI + Tests
+                    │                │
+                Deploy auto     Deploy + Approval
+                    ▼                ▼
+             Testing Server    Production Server
+```
 
 - **Commits:** `<tipo>(<scope>): <descripción en imperativo>`
   - Tipos: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `style`, `perf`
-- **Ramas:** `<tipo>/<descripcion-kebab-case>` (ej: `feat/user-auth`)
+- **Ramas de trabajo:** `<tipo>/<descripcion-kebab-case>` — se crean desde `testing`
+- **`testing`:** recibe PRs de features. Merge → CI → deploy automático al servidor de testing
+- **`main`:** recibe PRs desde `testing`. Merge → CI → approval manual → deploy a producción
 - **PRs:** pequeños (< 400 líneas), una sola responsabilidad, squash and merge
-- **Main:** siempre deployable, protegida, requiere PR + review + CI pass
+
+### Entornos
+
+| | Testing | Production |
+|---|---|---|
+| Rama | `testing` | `main` |
+| Servidor | IP dedicada | IP dedicada |
+| Deploy | Automático | Con approval |
+| Logs | `debug` | `info` |
+| CORS | `testing.miapp.com` | `miapp.com` |
 
 ---
 
@@ -269,7 +294,8 @@ deploy que un `undefined` silencioso en producción a las 3 AM.
 | `IA/testing.md` | Testing: pyramid, tools, what to test, CI | ~310 |
 | `IA/logging.md` | Logging: slog, levels, correlation, health checks | ~180 |
 | `IA/config.md` | Config: env vars, typed loading, fail fast | ~170 |
-| **Total** | | **~2,480** |
+| `IA/deployment.md` | CD: two-server setup, workflows, rollback | ~370 |
+| **Total** | | **~2,850** |
 
 ---
 

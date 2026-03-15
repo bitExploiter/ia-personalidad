@@ -1,185 +1,112 @@
-# OpenSpec — Workflow oficial de desarrollo
+# OpenSpec (OPSX) — Workflow oficial de desarrollo
 
 ---
 
-## Filosofía
+## Por qué OpenSpec
 
-OpenSpec resuelve el problema principal del desarrollo asistido por IA:
-**el contexto amplio produce respuestas genéricas**. Cuando le das a Claude
-todo el proyecto, obtiene una respuesta promedio. Cuando le das exactamente
-lo que necesita saber para esta tarea, obtiene la respuesta correcta.
+El desarrollo asistido por IA es más preciso cuando el contexto es reducido.
+OpenSpec formaliza esto: cada tarea se define en un **change pequeño y focalizado**
+antes de escribir código. Contexto acotado → precisión mayor → menos iteraciones.
 
-La metodología funciona así: antes de escribir código, escribes una **spec**
-— un documento pequeño y preciso que define el scope, el objetivo y las
-restricciones de la tarea. Claude trabaja sobre la spec, no sobre el proyecto
-entero. Contexto acotado → precisión mayor → menos iteraciones.
+**OpenSpec es la metodología oficial de este proyecto.** Los comandos OPSX
+(`/opsx:explore`, `/opsx:propose`, `/opsx:apply`, `/opsx:archive`, etc.) los
+define y ejecuta OpenSpec. Este documento establece cuándo usarlos, cómo integran
+con nuestras convenciones y qué criterios seguir para changes de calidad.
 
 ---
 
-## Ciclo de vida de una spec
+## Ciclo de trabajo en este proyecto
 
 ```
-/explore        →      /new         →      /apply       →    /archive
-
-Entender el      Crear la spec       Ejecutar la spec    Guardar como
-terreno          (scope + reglas)    contra el código    registro
+/opsx:explore → /opsx:propose → /opsx:apply → verificar → commit → /opsx:archive
 ```
 
----
+### 1. Explorar antes de proponer
 
-## Los 4 comandos
-
-### `/explore`
-
-**Cuándo:** al inicio de cualquier tarea no trivial, antes de crear la spec.
-
-**Qué hace:** explora el codebase en el área relevante para entender
-estructura actual, patrones existentes, dependencias y posibles colisiones
-antes de proponer nada.
-
-**Cuándo usarlo:**
+Usar `/opsx:explore` cuando:
 - La tarea toca código que no conoces bien.
 - Antes de crear un feature que se conecta con módulos existentes.
 - Cuando no estás seguro de si ya existe algo que resuelve el problema.
 
-**Cuándo NO usarlo:**
+No necesitas `/opsx:explore` para:
 - Tareas triviales (cambiar un texto, corregir un typo).
 - Cuando ya sabes exactamente qué archivos vas a tocar.
 
----
+### 2. Crear el change
 
-### `/new`
+Usar `/opsx:propose` para crear el change con todos los artefactos de
+planificación (proposal, specs, design, tasks) en un solo paso.
 
-**Cuándo:** después de `/explore` (o directamente si el scope es claro).
+Para control más granular (workflow expandido), usar `/opsx:new` + `/opsx:continue`
+para crear artefactos uno por uno, o `/opsx:ff` para crearlos todos de golpe.
 
-**Qué hace:** crea un archivo de spec en `specs/` con el scope exacto,
-objetivo, archivos involucrados y restricciones de la tarea.
-
-**Estructura de una spec bien escrita:**
-
-```markdown
-# spec: <nombre-en-kebab-case>
-
-## Objetivo
-<!-- Una sola frase: qué se va a lograr -->
-
-## Scope
-<!-- Qué archivos se van a crear o modificar. Ser específico. -->
-- Crear: `features/users/components/UserAvatar.tsx`
-- Modificar: `features/users/schemas.ts`
-- No tocar: el resto del proyecto
-
-## Contexto
-<!-- Solo lo que Claude necesita saber para esta tarea -->
-- El componente usa shadcn/ui Avatar
-- El schema ya tiene `avatarUrl?: string`
-- Ver convenciones: IA/react.md, IA/shadcn.md
-
-## Restricciones
-<!-- Reglas que no se pueden violar -->
-- Named export, no default
-- Props tipadas con interface
-- No agregar nuevas dependencias
-
-## Definición de hecho
-<!-- Cómo saber que la tarea está completa -->
-- [ ] Componente renderiza avatar o fallback con iniciales
-- [ ] Tests unitarios del comportamiento de fallback
-- [ ] Sin errores de TypeScript
-```
-
-**Reglas para escribir specs:**
-- **Scope mínimo.** Si la spec toca más de 5 archivos, dividirla.
-- **Una sola responsabilidad.** Una spec = una cosa bien hecha.
-- **Explícita sobre implícita.** Mencionar los archivos de convenciones
-  relevantes. No asumir que Claude los recuerda.
+**Criterios para un buen change en este proyecto:**
+- **Scope mínimo.** Si el change toca más de 5 archivos, dividirlo en varios.
+- **Una sola responsabilidad.** Un change = una cosa bien hecha.
+- **Referenciar convenciones.** Mencionar qué archivos de `IA/` aplican
+  (ej: "seguir IA/react.md para componentes, IA/shadcn.md para UI").
 - **Definición de hecho medible.** Checklist concreto, no "funciona bien".
 
----
+### 3. Aplicar el change
 
-### `/apply`
+Usar `/opsx:apply` cuando los artefactos están listos.
 
-**Cuándo:** la spec está lista y revisada.
-
-**Qué hace:** ejecuta la spec — Claude lee la spec + los archivos del scope
-y produce el código. Solo carga lo que la spec indica. Nada más.
-
-**Reglas:**
-- No modificar el scope durante el apply. Si aparece algo inesperado,
-  parar, actualizar la spec y hacer un nuevo apply.
-- Si el apply falla o produce algo incorrecto, corregir la spec, no
-  intentar "guiar" a Claude con mensajes adicionales.
+**Reglas durante el apply:**
+- No modificar el scope a mitad del apply. Si aparece algo inesperado,
+  parar, actualizar los artefactos y hacer un nuevo apply.
+- Si el apply falla o produce algo incorrecto, corregir los artefactos — no
+  intentar guiar con mensajes adicionales.
 - Verificar el resultado según la tabla de verificación de `CLAUDE.md`
-  antes de hacer commit.
+  (regla #1) antes de hacer commit.
+
+### 4. Verificar (opcional pero recomendado)
+
+Usar `/opsx:verify` antes de archivar para validar que la implementación
+coincide con los artefactos. Detecta tareas incompletas, specs no cubiertas
+y divergencias entre diseño y código.
+
+### 5. Archivar
+
+Usar `/opsx:archive` cuando el change fue aplicado, verificado y commiteado.
 
 ---
 
-### `/archive`
+## Comandos adicionales
 
-**Cuándo:** la spec fue aplicada, verificada, y el commit está hecho.
-
-**Qué hace:** mueve la spec de `specs/` a `specs/archive/` con la fecha
-de completado. Sirve como registro histórico de decisiones.
-
-**Estructura de archivo:**
-
-```
-specs/
-  active-spec.md          ← specs en progreso
-  another-spec.md
-
-specs/archive/
-  2026-03-14-user-avatar.md    ← specs completadas (con fecha)
-  2026-03-10-auth-refresh.md
-```
-
-**Convención de nombre al archivar:**
-```
-specs/archive/<YYYY-MM-DD>-<nombre-original>.md
-```
-
----
-
-## Estructura de carpetas en el proyecto
-
-```
-mi-proyecto/
-  specs/              ← specs activas (commiteadas, revisables en PR)
-  specs/archive/      ← specs completadas (historial)
-  IA/                 ← convenciones (este repo)
-  CLAUDE.md
-  PRD.md
-```
-
-Las specs se commitean. Son documentación de intención — cualquier miembro
-del equipo puede entender qué se planeó hacer y por qué.
+| Comando | Cuándo usarlo |
+|---------|---------------|
+| `/opsx:continue` | Crear artefactos uno por uno (workflow expandido) |
+| `/opsx:ff` | Crear todos los artefactos de golpe (workflow expandido) |
+| `/opsx:verify` | Validar implementación antes de archivar |
+| `/opsx:sync` | Mergear delta specs en specs principales |
+| `/opsx:bulk-archive` | Archivar varios changes completados a la vez |
+| `/opsx:onboard` | Tutorial guiado para aprender el workflow |
 
 ---
 
 ## Integración con el flujo de ramas
 
 ```
-1. Crear rama desde testing:
-   git checkout -b feat/user-avatar
+1. git checkout -b feat/user-avatar  (desde testing)
 
-2. /explore → entender el área de usuarios
+2. /opsx:explore → entender el área de usuarios
 
-3. /new → crear specs/user-avatar.md
+3. /opsx:propose → crear el change del feature
 
-4. Commitear la spec (opcional, buena práctica):
-   feat(spec): add user-avatar spec
+4. Commitear los artefactos (buena práctica):
+   feat(spec): add user-avatar change
 
-5. /apply → Claude ejecuta la spec
+5. /opsx:apply → ejecutar las tasks del change
 
 6. Verificar resultado (visual / curl / tests)
 
 7. Commitear el código:
    feat(users): add UserAvatar component with initials fallback
 
-8. /archive → mover spec a specs/archive/2026-03-14-user-avatar.md
+8. /opsx:archive → archivar el change completado
 
 9. Commitear el archive:
-   chore(specs): archive user-avatar spec
+   chore(specs): archive user-avatar change
 
 10. PR a testing → CI → deploy a testing server
 ```
@@ -190,11 +117,11 @@ del equipo puede entender qué se planeó hacer y por qué.
 
 | Situación | Usar |
 |-----------|------|
-| Feature nuevo, scope claro | OpenSpec completo (explore + new + apply) |
+| Feature nuevo | OpenSpec (explore + propose + apply) |
 | Bug fix simple, 1-2 archivos | Conversación directa |
 | Refactor de módulo completo | OpenSpec — el scope acotado es crítico |
 | Pregunta o explicación | Conversación directa |
-| Feature que toca múltiples dominios | OpenSpec — dividir en varias specs |
+| Feature que toca múltiples dominios | OpenSpec — dividir en varios changes |
 | Typo, renombrar variable | Conversación directa |
 | Integración con sistema externo | OpenSpec — contexto externo en la spec |
 
@@ -203,18 +130,21 @@ del equipo puede entender qué se planeó hacer y por qué.
 ## Anti-patrones
 
 ```
-❌ Spec con scope "agregar autenticación completa"
+❌ Change con scope "agregar autenticación completa"
    → Demasiado amplio. Dividir: jwt-middleware, refresh-token, protected-routes
 
-❌ Spec que dice "hacer que funcione mejor"
+❌ Change que dice "hacer que funcione mejor"
    → Sin definición de hecho. ¿Qué significa "mejor"?
 
-❌ Usar /apply sin haber hecho /explore en código desconocido
+❌ Usar /opsx:apply sin haber hecho /opsx:explore en código desconocido
    → Claude puede colisionar con patrones existentes
 
 ❌ Modificar el scope durante el apply porque "apareció algo"
-   → Parar, actualizar la spec, nuevo apply
+   → Parar, actualizar los artefactos, nuevo apply
 
-❌ No archivar las specs completadas
-   → El historial se pierde, el directorio specs/ se llena de ruido
+❌ No archivar los changes completados
+   → El historial se pierde, el directorio de changes se llena de ruido
+
+❌ Redefinir en el change lo que ya dice una convención de IA/
+   → Referenciar el archivo, no copiar su contenido
 ```

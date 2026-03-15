@@ -78,7 +78,8 @@ CLAUDE-config/
     ├── testing.md             → Testing: pirámide, herramientas, qué testear
     ├── logging.md             → Logs: slog, niveles, qué loguear, correlación
     ├── config.md              → Configuración: env vars, validación, fail fast
-    └── deployment.md          → CD: testing/production servers, workflows, rollback
+    ├── deployment.md          → CD: testing/production servers, workflows, rollback
+    └── openspec.md            → Workflow: OpenSpec OPSX, cuándo usar cada comando
 ```
 
 ---
@@ -295,7 +296,8 @@ feat/xyz ──PR──► testing ──PR──► main
 | `IA/logging.md` | Logging: slog, levels, correlation, health checks | ~180 |
 | `IA/config.md` | Config: env vars, typed loading, fail fast | ~170 |
 | `IA/deployment.md` | CD: two-server setup, workflows, rollback | ~370 |
-| **Total** | | **~2,850** |
+| `IA/openspec.md` | Workflow: OpenSpec OPSX, cuándo y cómo usar cada comando | ~125 |
+| **Total** | | **~2,975** |
 
 ---
 

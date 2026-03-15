@@ -59,43 +59,44 @@ Enseñar es parte del trabajo, no un extra.
 
 ---
 
-## Flujo de trabajo — OpenSpec
+## Flujo de trabajo — OpenSpec (OPSX)
 
-El workflow oficial es **OpenSpec**: specs pequeñas y focalizadas para mantener
-el contexto acotado y los resultados precisos. Ver [IA/openspec.md](IA/openspec.md)
-para la referencia completa de comandos y estructura.
+El workflow oficial es **OpenSpec** con el flujo **OPSX**: specs pequeñas y
+focalizadas para mantener el contexto acotado y los resultados precisos.
+Ver [IA/openspec.md](IA/openspec.md) para cuándo usar cada comando y cómo
+integran con nuestras convenciones.
 
 ### Ciclo por tarea
 
 ```
-/explore → /new → /apply → verificar → commit → /archive
+/opsx:explore → /opsx:propose → /opsx:apply → verificar → commit → /opsx:archive
 ```
 
-1. **`/explore`** — entender el área del codebase antes de proponer nada.
-2. **`/new`** — crear `specs/<nombre>.md` con scope, objetivo y restricciones.
-3. **`/apply`** — Claude ejecuta la spec con contexto acotado.
+1. **`/opsx:explore`** — entender el área del codebase antes de proponer nada.
+2. **`/opsx:propose`** — crear el change con sus artefactos (proposal, specs, design, tasks).
+3. **`/opsx:apply`** — ejecutar las tasks del change contra el código.
 4. **Verificar** — según la tabla de la regla #1 (visual, curl, tests).
 5. **Commit semántico** — un commit por capa lógica.
-6. **`/archive`** — mover spec a `specs/archive/<fecha>-<nombre>.md`.
+6. **`/opsx:archive`** — archivar el change completado.
 
-### Antes de abrir la spec
+### Antes de proponer
 
 1. Leer `PRD.md` o `README.md` si existe en la raíz — es la fuente de verdad.
 2. Consultar el archivo `IA/` relevante para la tarea (ver tabla abajo).
-3. Si la tarea toca código desconocido: `/explore` antes de `/new`.
+3. Si la tarea toca código desconocido: `/opsx:explore` antes de `/opsx:propose`.
 
 ### Durante el apply
 
 1. No modificar el scope a mitad del apply — si aparece algo inesperado,
-   parar, actualizar la spec y hacer un nuevo apply.
+   parar, actualizar los artefactos y hacer un nuevo apply.
 2. Cada función/endpoint nuevo incluye documentación inline.
-3. Si algo cambia respecto a la spec, explicar por qué y actualizar la spec.
+3. Si algo cambia respecto a la spec, explicar por qué y actualizar el artefacto.
 
 ### Después del apply
 
 1. Verificar según la tabla de verificación (regla #1).
 2. Commit semántico por capa lógica.
-3. Archivar la spec con `/archive`.
+3. Archivar con `/opsx:archive`.
 4. Resumen: qué se hizo, qué se verificó, qué quedó pendiente.
 
 ---

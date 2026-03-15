@@ -79,7 +79,8 @@ CLAUDE-config/
     ├── logging.md             → Logs: slog, niveles, qué loguear, correlación
     ├── config.md              → Configuración: env vars, validación, fail fast
     ├── deployment.md          → CD: testing/production servers, workflows, rollback
-    └── openspec.md            → Workflow: OpenSpec OPSX, cuándo usar cada comando
+    ├── openspec.md            → Workflow: OpenSpec OPSX, cuándo usar cada comando
+    └── stitch.md              → Diseño UI: flujo CDD, prompts Stitch, adaptación
 ```
 
 ---
@@ -345,7 +346,8 @@ feat/xyz ──PR──► testing ──PR──► main
 | `IA/config.md` | Config: env vars, typed loading, fail fast | ~170 |
 | `IA/deployment.md` | CD: two-server setup, workflows, rollback | ~370 |
 | `IA/openspec.md` | Workflow: OpenSpec OPSX, cuándo y cómo usar cada comando | ~125 |
-| **Total** | | **~2,975** |
+| `IA/stitch.md` | Diseño UI: flujo CDD, prompts Stitch, checklist adaptación | ~200 |
+| **Total** | | **~3,175** |
 
 ---
 

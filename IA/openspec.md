@@ -46,6 +46,9 @@ para crear artefactos uno por uno, o `/opsx:ff` para crearlos todos de golpe.
 - **Referenciar convenciones.** Mencionar qué archivos de `IA/` aplican
   (ej: "seguir IA/react.md para componentes, IA/shadcn.md para UI").
 - **Definición de hecho medible.** Checklist concreto, no "funciona bien".
+- **Si el change incluye UI nueva:** incluir en el artefacto `design.md` el
+  prompt de Stitch informado por la spec (campos, endpoints, roles). Ver
+  [stitch.md](stitch.md) para el template y el checklist de adaptación.
 
 ### 3. Aplicar el change
 

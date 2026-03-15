@@ -141,3 +141,4 @@ Leer **solo el archivo relevante** para la tarea en curso — no cargar todos.
 | Configuración           | [IA/config.md](IA/config.md)                                  |
 | Deployment (CD)         | [IA/deployment.md](IA/deployment.md)                          |
 | Workflow (OpenSpec)     | [IA/openspec.md](IA/openspec.md)                              |
+| Diseño UI (Stitch)    | [IA/stitch.md](IA/stitch.md)                                  |

@@ -42,6 +42,7 @@ contexto.
 | Tecnología | Versión | Propósito |
 |------------|---------|-----------|
 | **Go** | 1.22+ | Backend — stdlib-first, mínimas dependencias |
+| **GORM** | 2.x | ORM — repository pattern, scopes, hooks, migrations |
 | **PostgreSQL** | 15+ | Base de datos relacional |
 | **PostGIS** | 3.x | Extensión geoespacial para PostgreSQL |
 
@@ -69,6 +70,7 @@ ia-personalidad/
     ├── shadcn.md              → Componentes UI: composición, cn(), temas
     ├── tailwind.md            → CSS: utility-first, tokens, dark mode, responsive
     ├── go.md                  → Backend: estructura, errores, HTTP, testing
+    ├── gorm.md                → ORM: modelos, repository, scopes, transacciones
     ├── postgresql-postgis.md  → Base de datos: naming, indexes, spatial queries
     ├── docker.md              → Containers: builds, compose, health checks
     ├── api.md                 → API: formato de respuesta, códigos HTTP, paginación
@@ -335,6 +337,7 @@ feat/xyz ──PR──► testing ──PR──► main
 | `IA/shadcn.md` | UI components: composición, cn(), temas, catálogo | ~100 |
 | `IA/tailwind.md` | CSS: utility-first, tokens, responsive, dark mode | ~115 |
 | `IA/go.md` | Backend: estructura, errores, HTTP, testing | ~70 |
+| `IA/gorm.md` | ORM: modelos, repository, scopes, transacciones, hooks | ~250 |
 | `IA/postgresql-postgis.md` | DB: naming, constraints, indexes, spatial | ~60 |
 | `IA/docker.md` | Containers: multi-stage, compose, healthchecks | ~50 |
 | `IA/api.md` | API: response format, HTTP codes, pagination | ~85 |
@@ -347,7 +350,7 @@ feat/xyz ──PR──► testing ──PR──► main
 | `IA/deployment.md` | CD: two-server setup, workflows, rollback | ~370 |
 | `IA/openspec.md` | Workflow: OpenSpec OPSX, cuándo y cómo usar cada comando | ~125 |
 | `IA/stitch.md` | Diseño UI: flujo CDD, prompts Stitch, checklist adaptación | ~200 |
-| **Total** | | **~3,175** |
+| **Total** | | **~3,425** |
 
 ---
 

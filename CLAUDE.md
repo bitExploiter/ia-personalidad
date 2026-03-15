@@ -59,29 +59,44 @@ Enseñar es parte del trabajo, no un extra.
 
 ---
 
-## Flujo de trabajo
+## Flujo de trabajo — OpenSpec
 
-### Antes de escribir código
+El workflow oficial es **OpenSpec**: specs pequeñas y focalizadas para mantener
+el contexto acotado y los resultados precisos. Ver [IA/openspec.md](IA/openspec.md)
+para la referencia completa de comandos y estructura.
 
-1. Buscar archivos de contexto en la raíz del proyecto (`PRD.md`, `README.md`,
-   `docs/`). Si existen, leerlos.
-2. Leer y entender el contexto completo del cambio solicitado.
-3. Revisar archivos relevantes del proyecto antes de proponer cambios.
-4. Explicar el plan: qué se va a hacer, por qué, y en qué orden.
-5. Si hay decisiones de diseño, razonarlas en voz alta antes de ejecutar.
+### Ciclo por tarea
 
-### Durante la implementación
+```
+/explore → /new → /apply → verificar → commit → /archive
+```
 
-1. Implementar por capas lógicas. Un commit por capa.
-2. Cada función/endpoint nuevo incluye su documentación inline.
-3. Si algo cambia respecto al plan inicial, explicar por qué.
+1. **`/explore`** — entender el área del codebase antes de proponer nada.
+2. **`/new`** — crear `specs/<nombre>.md` con scope, objetivo y restricciones.
+3. **`/apply`** — Claude ejecuta la spec con contexto acotado.
+4. **Verificar** — según la tabla de la regla #1 (visual, curl, tests).
+5. **Commit semántico** — un commit por capa lógica.
+6. **`/archive`** — mover spec a `specs/archive/<fecha>-<nombre>.md`.
 
-### Después de implementar
+### Antes de abrir la spec
 
-1. Verificar el resultado según la tabla de verificación (regla #1).
-2. Revisar que la documentación esté completa.
-3. Hacer commit(s) semántico(s).
-4. Resumen final: qué se hizo, qué se verificó, qué quedó pendiente.
+1. Leer `PRD.md` o `README.md` si existe en la raíz — es la fuente de verdad.
+2. Consultar el archivo `IA/` relevante para la tarea (ver tabla abajo).
+3. Si la tarea toca código desconocido: `/explore` antes de `/new`.
+
+### Durante el apply
+
+1. No modificar el scope a mitad del apply — si aparece algo inesperado,
+   parar, actualizar la spec y hacer un nuevo apply.
+2. Cada función/endpoint nuevo incluye documentación inline.
+3. Si algo cambia respecto a la spec, explicar por qué y actualizar la spec.
+
+### Después del apply
+
+1. Verificar según la tabla de verificación (regla #1).
+2. Commit semántico por capa lógica.
+3. Archivar la spec con `/archive`.
+4. Resumen: qué se hizo, qué se verificó, qué quedó pendiente.
 
 ---
 
@@ -124,3 +139,4 @@ Leer **solo el archivo relevante** para la tarea en curso — no cargar todos.
 | Logging / Observabilidad| [IA/logging.md](IA/logging.md)                                |
 | Configuración           | [IA/config.md](IA/config.md)                                  |
 | Deployment (CD)         | [IA/deployment.md](IA/deployment.md)                          |
+| Workflow (OpenSpec)     | [IA/openspec.md](IA/openspec.md)                              |

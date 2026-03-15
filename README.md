@@ -1,4 +1,4 @@
-# CLAUDE-config
+# ia-personalidad
 
 Sistema de convenciones para desarrollo de software con Claude Code.
 Un conjunto modular de reglas, patrones y ejemplos que garantizan código
@@ -59,7 +59,7 @@ contexto.
 ## Estructura del repositorio
 
 ```
-CLAUDE-config/
+ia-personalidad/
 ├── CLAUDE.md                  → Identidad, reglas universales, tabla de routing
 ├── README.md                  → Este documento
 └── IA/                        → Convenciones por tecnología (1 archivo = 1 tema)

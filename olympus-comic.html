@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OLYMPUS — El Cómic</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@600&display=swap');
+
+  :root {
+    --zeus:       #7B2FBE;
+    --apollo:     #2E86AB;
+    --hephaestus: #E07A5F;
+    --hermes:     #3BB273;
+    --demeter:    #8B7A3D;
+    --athena:     #4A6FA5;
+    --artemis:    #5C6BC0;
+    --hera:       #C2185B;
+    --hestia:     #FF7043;
+    --poseidon:   #00838F;
+    --user:       #F59E0B;
+    --ink:        #1A1A2E;
+    --paper:      #FFF9F0;
+    --panel-bg:   #FFFEF9;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Comic Neue', cursive;
+    background: #E8E0D0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0,0,0,0.04) 39px, rgba(0,0,0,0.04) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,0,0,0.04) 39px, rgba(0,0,0,0.04) 40px);
+    min-height: 100vh;
+    padding: 32px 24px;
+  }
+
+  /* ── PORTADA ── */
+  .cover {
+    max-width: 860px;
+    margin: 0 auto 40px;
+    background: var(--ink);
+    border-radius: 4px;
+    border: 5px solid var(--ink);
+    overflow: hidden;
+    box-shadow: 8px 8px 0 rgba(0,0,0,0.4);
+    position: relative;
+  }
+
+  .cover-top {
+    background: var(--zeus);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cover-publisher {
+    font-family: 'Bangers', cursive;
+    font-size: 18px;
+    color: #FFD700;
+    letter-spacing: 3px;
+  }
+
+  .cover-issue {
+    font-family: 'Bangers', cursive;
+    font-size: 15px;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: 2px;
+  }
+
+  .cover-body {
+    background: linear-gradient(160deg, #0F0F1A 0%, #1A1A2E 40%, #0F3460 100%);
+    padding: 40px 32px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover-body::before {
+    content: '⚡';
+    position: absolute;
+    font-size: 300px;
+    opacity: 0.04;
+    top: -40px;
+    right: -40px;
+    line-height: 1;
+  }
+
+  .cover-title {
+    font-family: 'Bangers', cursive;
+    font-size: 88px;
+    color: #FFD700;
+    letter-spacing: 4px;
+    line-height: 0.9;
+    text-shadow: 4px 4px 0 rgba(0,0,0,0.5), -2px -2px 0 #C9A84C;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-subtitle {
+    font-family: 'Bangers', cursive;
+    font-size: 28px;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 3px;
+    margin-top: 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-tagline {
+    margin-top: 24px;
+    display: inline-block;
+    background: #FFD700;
+    color: var(--ink);
+    font-family: 'Bangers', cursive;
+    font-size: 20px;
+    letter-spacing: 2px;
+    padding: 6px 18px;
+    border-radius: 4px;
+    transform: rotate(-2deg);
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-gods-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-god-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    border: 3px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.07);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  /* ── PÁGINA DE CÓMIC ── */
+  .comic-page {
+    max-width: 860px;
+    margin: 0 auto 40px;
+    background: var(--paper);
+    border: 5px solid var(--ink);
+    border-radius: 4px;
+    box-shadow: 8px 8px 0 rgba(0,0,0,0.4);
+    overflow: hidden;
+  }
+
+  .page-header-strip {
+    background: var(--zeus);
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .page-header-strip .logo {
+    font-family: 'Bangers', cursive;
+    font-size: 18px;
+    color: #FFD700;
+    letter-spacing: 3px;
+  }
+
+  .page-header-strip .pg {
+    font-family: 'Bangers', cursive;
+    font-size: 15px;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: 2px;
+  }
+
+  /* ── GRID DE PANELES ── */
+  .panels {
+    display: grid;
+    gap: 0;
+    padding: 0;
+  }
+
+  /* Layouts predefinidos */
+  .layout-3col  { grid-template-columns: 1fr 1fr 1fr; }
+  .layout-2col  { grid-template-columns: 1fr 1fr; }
+  .layout-wide-narrow { grid-template-columns: 2fr 1fr; }
+  .layout-narrow-wide { grid-template-columns: 1fr 2fr; }
+  .layout-1col  { grid-template-columns: 1fr; }
+  .layout-3col-top-1 { grid-template-columns: 1fr 1fr 1fr; }
+
+  /* ── PANEL ── */
+  .panel {
+    background: var(--panel-bg);
+    border: 3.5px solid var(--ink);
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .panel.tall   { min-height: 320px; }
+  .panel.xtall  { min-height: 420px; }
+  .panel.short  { min-height: 140px; }
+
+  /* Fondos de escena */
+  .bg-dark   { background: linear-gradient(160deg, #0F0F1A, #1A1A2E); }
+  .bg-zeus   { background: radial-gradient(ellipse at 30% 30%, rgba(123,47,190,0.25) 0%, transparent 70%), var(--panel-bg); }
+  .bg-server { background: linear-gradient(180deg, #0F3460 0%, #16213E 100%); }
+  .bg-field  { background: linear-gradient(180deg, #87CEEB 0%, #90EE90 70%, #5A8A3C 100%); }
+  .bg-forge  { background: radial-gradient(ellipse at 50% 80%, rgba(224,122,95,0.4) 0%, transparent 60%), linear-gradient(180deg, #2D1B1B 0%, #1A0A0A 100%); }
+  .bg-olympus { background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.3) 0%, transparent 60%), linear-gradient(180deg, #87CEEB 0%, #E0F0FF 100%); }
+  .bg-code   { background: #0D1117; }
+  .bg-victory { background: radial-gradient(ellipse at 50% 50%, rgba(255,215,0,0.3) 0%, transparent 70%), linear-gradient(160deg, #0F0F1A, #1A1A2E); }
+
+  /* ── PERSONAJES ── */
+  .character {
+    position: absolute;
+    font-size: 72px;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .char-center { left: 50%; transform: translateX(-50%); bottom: 80px; }
+  .char-left   { left: 16px; bottom: 80px; }
+  .char-right  { right: 16px; bottom: 80px; }
+  .char-tl     { top: 16px; left: 16px; }
+  .char-tr     { top: 16px; right: 16px; }
+  .char-small  { font-size: 48px; }
+  .char-big    { font-size: 96px; }
+
+  /* ── BURBUJAS DE DIÁLOGO ── */
+  .bubble {
+    position: relative;
+    background: white;
+    border: 3px solid var(--ink);
+    border-radius: 18px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.4;
+    max-width: 85%;
+    z-index: 10;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+  }
+
+  .bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -14px;
+    left: 22px;
+    border-left: 10px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 14px solid var(--ink);
+  }
+
+  .bubble.right::after {
+    left: auto;
+    right: 22px;
+  }
+
+  .bubble.think {
+    border-radius: 50%;
+    font-style: italic;
+  }
+  .bubble.think::after {
+    border-top: 8px solid var(--ink);
+    bottom: -10px;
+    left: 30px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+  }
+
+  .bubble.shout {
+    background: #FFF3CD;
+    border-color: #FF6B00;
+    border-width: 3.5px;
+    border-radius: 6px;
+    transform: rotate(-1deg);
+  }
+  .bubble.shout::after {
+    border-top-color: #FF6B00;
+  }
+
+  .bubble.zeus-b   { background: rgba(123,47,190,0.08); border-color: var(--zeus); color: var(--zeus); }
+  .bubble.zeus-b::after { border-top-color: var(--zeus); }
+
+  .bubble.user-b   { background: rgba(245,158,11,0.10); border-color: var(--user); color: #78350F; }
+  .bubble.user-b::after { border-top-color: var(--user); }
+
+  .bubble.hermes-b { background: rgba(59,178,115,0.08); border-color: var(--hermes); color: #1A5C3A; }
+  .bubble.hermes-b::after { border-top-color: var(--hermes); }
+
+  .bubble.hera-b   { background: rgba(194,24,91,0.08); border-color: var(--hera); color: var(--hera); }
+  .bubble.hera-b::after { border-top-color: var(--hera); }
+
+  .bubble.dark-b   { background: #1A1A2E; border-color: #FFD700; color: #FFD700; }
+  .bubble.dark-b::after { border-top-color: #FFD700; }
+
+  /* ── ETIQUETA DE PERSONAJE ── */
+  .name-tag {
+    display: inline-block;
+    font-family: 'Bangers', cursive;
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 2px 10px;
+    border-radius: 3px;
+    margin-bottom: 5px;
+    color: white;
+  }
+
+  .nt-zeus     { background: var(--zeus); }
+  .nt-user     { background: var(--user); color: var(--ink); }
+  .nt-hermes   { background: var(--hermes); }
+  .nt-demeter  { background: var(--demeter); }
+  .nt-athena   { background: var(--athena); }
+  .nt-apollo   { background: var(--apollo); }
+  .nt-heph     { background: var(--hephaestus); }
+  .nt-artemis  { background: var(--artemis); }
+  .nt-hera     { background: var(--hera); }
+  .nt-hestia   { background: var(--hestia); }
+  .nt-poseidon { background: var(--poseidon); }
+
+  /* ── CAPTION ── */
+  .caption {
+    background: var(--ink);
+    color: #FFD700;
+    font-family: 'Bangers', cursive;
+    font-size: 14px;
+    letter-spacing: 2px;
+    padding: 5px 12px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 10px;
+    z-index: 10;
+    position: relative;
+  }
+
+  .caption.white-cap {
+    background: white;
+    color: var(--ink);
+    border: 2px solid var(--ink);
+  }
+
+  /* ── SFX ── */
+  .sfx {
+    font-family: 'Bangers', cursive;
+    font-size: 52px;
+    letter-spacing: 3px;
+    line-height: 1;
+    position: absolute;
+    z-index: 5;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+    transform: rotate(-8deg);
+    pointer-events: none;
+  }
+
+  .sfx-gold   { color: #FFD700; -webkit-text-stroke: 2px var(--ink); }
+  .sfx-red    { color: #FF3B30; -webkit-text-stroke: 2px var(--ink); }
+  .sfx-green  { color: #30D158; -webkit-text-stroke: 2px var(--ink); }
+  .sfx-purple { color: #BF5AF2; -webkit-text-stroke: 2px var(--ink); }
+  .sfx-small  { font-size: 32px; }
+  .sfx-big    { font-size: 72px; }
+
+  /* ── PANEL FULL-WIDTH ── */
+  .panel-full {
+    grid-column: 1 / -1;
+  }
+
+  /* ── CÓDIGO ── */
+  .code-block {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #00FF88;
+    background: #0D1117;
+    border: 2px solid #30D158;
+    border-radius: 6px;
+    padding: 10px 14px;
+    line-height: 1.6;
+    position: relative;
+    z-index: 10;
+    white-space: pre;
+  }
+
+  .code-block .key { color: #FFD700; }
+  .code-block .val { color: #58A6FF; }
+
+  /* ── DIALOGO MULTI-BURBUJA ── */
+  .speech-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+    position: relative;
+  }
+
+  /* ── GOD GRID PANEL ── */
+  .gods-panel-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    z-index: 10;
+    position: relative;
+  }
+
+  .god-call-card {
+    background: rgba(255,255,255,0.9);
+    border: 2.5px solid var(--ink);
+    border-radius: 8px;
+    padding: 8px 10px;
+    text-align: center;
+  }
+
+  .god-call-card .emoji { font-size: 28px; display: block; margin-bottom: 2px; }
+  .god-call-card .god-name {
+    font-family: 'Bangers', cursive;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+  .god-call-card .god-task {
+    font-size: 9px;
+    color: #666;
+    margin-top: 2px;
+    line-height: 1.3;
+  }
+
+  /* ── DONE SIGNAL ── */
+  .done-signal {
+    background: rgba(194,24,91,0.15);
+    border: 3px solid var(--hera);
+    border-radius: 10px;
+    padding: 12px 16px;
+    z-index: 10;
+    position: relative;
+  }
+
+  .done-signal .done-title {
+    font-family: 'Bangers', cursive;
+    font-size: 20px;
+    color: var(--hera);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .done-signal .done-item {
+    font-size: 11px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  .done-signal .done-item::before {
+    content: '✓ ';
+    color: #059669;
+    font-weight: 900;
+  }
+
+  /* ── PANEL SEPARADOR DE CAPÍTULO ── */
+  .chapter-banner {
+    background: var(--ink);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .chapter-num {
+    font-family: 'Bangers', cursive;
+    font-size: 48px;
+    color: #FFD700;
+    line-height: 1;
+  }
+
+  .chapter-info h3 {
+    font-family: 'Bangers', cursive;
+    font-size: 22px;
+    color: white;
+    letter-spacing: 3px;
+  }
+
+  .chapter-info p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 2px;
+  }
+
+  /* ── RECAP BOX ── */
+  .recap-box {
+    background: #FFF3CD;
+    border: 3px solid #FF6B00;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: var(--ink);
+    line-height: 1.6;
+    z-index: 10;
+    position: relative;
+  }
+
+  .recap-box strong {
+    font-family: 'Bangers', cursive;
+    font-size: 14px;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 4px;
+    color: #FF6B00;
+  }
+
+  /* ── PIE DE PÁGINA ── */
+  .page-footer {
+    background: var(--ink);
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .page-footer .footer-text {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    font-style: italic;
+  }
+
+  .page-footer .footer-next {
+    font-family: 'Bangers', cursive;
+    font-size: 13px;
+    color: #FFD700;
+    letter-spacing: 2px;
+  }
+
+  /* ── BURST / STARBURST ── */
+  .burst {
+    position: absolute;
+    font-family: 'Bangers', cursive;
+    letter-spacing: 1px;
+    background: #FFD700;
+    color: var(--ink);
+    padding: 8px 14px;
+    border-radius: 2px;
+    transform: rotate(3deg);
+    font-size: 16px;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+    z-index: 20;
+  }
+
+  .burst.red  { background: #FF3B30; color: white; }
+  .burst.purple { background: var(--zeus); color: #FFD700; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ PORTADA ═══════════════════ -->
+<div class="cover">
+  <div class="cover-top">
+    <span class="cover-publisher">⚡ OLYMPUS COMICS</span>
+    <span class="cover-issue">N.° 1 — EDICIÓN ESPECIAL</span>
+  </div>
+  <div class="cover-body">
+    <div class="cover-title">OLYMPUS</div>
+    <div class="cover-subtitle">El Sistema Multiagente</div>
+    <div class="cover-tagline">¡ZEUS ORQUESTA · LOS DIOSES EJECUTAN!</div>
+    <div class="cover-gods-row">
+      <div class="cover-god-avatar" style="border-color:#BF5AF2;">⚡</div>
+      <div class="cover-god-avatar" style="border-color:#2E86AB;">☀️</div>
+      <div class="cover-god-avatar" style="border-color:#E07A5F;">🔨</div>
+      <div class="cover-god-avatar" style="border-color:#3BB273;">🪶</div>
+      <div class="cover-god-avatar" style="border-color:#8B7A3D;">🌾</div>
+      <div class="cover-god-avatar" style="border-color:#4A6FA5;">🦉</div>
+      <div class="cover-god-avatar" style="border-color:#5C6BC0;">🏹</div>
+      <div class="cover-god-avatar" style="border-color:#C2185B;">👑</div>
+      <div class="cover-god-avatar" style="border-color:#FF7043;">🔥</div>
+      <div class="cover-god-avatar" style="border-color:#00838F;">🔱</div>
+    </div>
+  </div>
+  <div class="page-footer" style="background:rgba(0,0,0,0.4);">
+    <span class="footer-text">Diseñado desde Colombia con amor — Jorge Diaz &lt;bitExploiter&gt;</span>
+    <span class="footer-next">CLAUDE-OPUS-4-6 INSIDE</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ PÁGINA 1 — El origen ═══════════════════ -->
+<div class="comic-page">
+  <div class="page-header-strip">
+    <span class="logo">⚡ OLYMPUS</span>
+    <span class="pg">PÁG. 1 — EL ORIGEN</span>
+  </div>
+
+  <!-- Fila 1: 1 panel wide -->
+  <div class="panels layout-1col">
+    <div class="panel tall bg-olympus">
+      <span class="character char-center char-big">⚡</span>
+      <div class="caption">El Monte Olimpo. Madrugada. Un desarrollador abre su proyecto...</div>
+      <div class="sfx sfx-gold" style="top:20px;right:30px;font-size:42px;transform:rotate(5deg);">¡CLIC!</div>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-user">👤 DESARROLLADOR</div>
+          <div class="bubble user-b">*Abre la carpeta del proyecto en Claude Code*</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fila 2: 2 paneles -->
+  <div class="panels layout-2col">
+    <div class="panel bg-dark">
+      <span class="character" style="font-size:80px;top:16px;left:50%;transform:translateX(-50%);">💤</span>
+      <div class="caption">Zeus dormía plácidamente...</div>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-zeus">⚡ ZEUS</div>
+          <div class="bubble zeus-b think">Zzzz... specs... zzzz... contratos...</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel bg-dark">
+      <span class="sfx sfx-gold" style="top:20px;left:20px;font-size:60px;transform:rotate(-5deg);">¡BOOM!</span>
+      <span class="character" style="font-size:80px;top:60px;right:20px;transform:rotate(15deg);">⚡</span>
+      <div class="caption">...Hasta que detectó el OLYMPUS.md</div>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-zeus">⚡ ZEUS</div>
+          <div class="bubble zeus-b shout">¡¡OLYMPUS.MD DETECTADO!! ¡BOOTSTRAP INICIADO!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fila 3: 3 paneles -->
+  <div class="panels layout-3col">
+    <div class="panel short bg-zeus">
+      <div class="caption white-cap">Lee OLYMPUS.md...</div>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-zeus">⚡ ZEUS</div>
+          <div class="bubble zeus-b" style="font-size:12px;">10 dioses... cargando registros...</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel short bg-zeus">
+      <div class="caption white-cap">Lee PRD.md...</div>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-zeus">⚡ ZEUS</div>
+          <div class="bubble zeus-b" style="font-size:12px;">Entendido. Plataforma de gestión con auth RBAC.</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel short bg-zeus">
+      <div class="caption white-cap">Lee CLAUDE.md...</div>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-zeus">⚡ ZEUS</div>
+          <div class="bubble zeus-b shout" style="font-size:12px;">¡LISTO! ¡El Olimpo está activo!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">El bootstrap ocurre siempre. Sin preguntar, sin esperar instrucción.</span>
+    <span class="footer-next">CONTINÚA →</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ PÁGINA 2 — La Petición ═══════════════════ -->
+<div class="comic-page">
+  <div class="page-header-strip">
+    <span class="logo">⚡ OLYMPUS</span>
+    <span class="pg">PÁG. 2 — LA PETICIÓN</span>
+  </div>
+
+  <!-- Panel grande: Zeus reporta al usuario -->
+  <div class="panels layout-wide-narrow">
+    <div class="panel xtall bg-dark">
+      <span class="character char-center" style="font-size:96px;bottom:160px;">⚡</span>
+      <div class="burst purple" style="top:20px;right:20px;">¡OPUS 4.6!</div>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-zeus">⚡ ZEUS — ORQUESTADOR</div>
+          <div class="bubble dark-b" style="font-size:15px;max-width:100%;">
+            ⚡ El Olimpo está activo.<br>
+            10 dioses listos — Zeus (Opus) orquesta,<br>
+            9 Sonnet ejecutan.<br><br>
+            <strong>¿Qué construimos hoy?</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel xtall bg-field">
+      <span class="character char-center" style="font-size:72px;bottom:120px;">👤</span>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-user">👤 DESARROLLADOR</div>
+          <div class="bubble user-b" style="font-size:13px;">
+            Quiero un sistema de autenticación con JWT y control de roles por usuario.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zeus analiza -->
+  <div class="panels layout-1col">
+    <div class="panel short bg-zeus" style="min-height:120px;">
+      <div class="sfx sfx-purple sfx-small" style="top:10px;right:20px;transform:rotate(3deg);">¡ANALIZA!</div>
+      <div style="display:flex;gap:16px;align-items:flex-start;z-index:10;position:relative;">
+        <div>
+          <div class="name-tag nt-zeus">⚡ ZEUS — ÁRBOL DE DECISIÓN</div>
+          <div class="bubble zeus-b" style="font-size:12px;max-width:600px;">
+            🔍 <strong>¿Toca schema de DB?</strong> SÍ → Demeter primero.<br>
+            🔍 <strong>¿Toca endpoint de API?</strong> SÍ → Athena + Hermes.<br>
+            🔍 <strong>¿Toca UI/Frontend?</strong> SÍ → Hephaestus → Apollo.<br>
+            🔍 <strong>¿Toca auth/permisos?</strong> SÍ → Athena siempre.<br>
+            → <strong>VEREDICTO: 3 changes. feat. Múltiples dominios.</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zeus presenta el contrato -->
+  <div class="panels layout-2col">
+    <div class="panel tall bg-zeus">
+      <span class="character char-right" style="font-size:72px;bottom:100px;">⚡</span>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-zeus">⚡ ZEUS</div>
+          <div class="bubble zeus-b" style="font-size:13px;">
+            Voy a dividir esto en 3 changes:<br><br>
+            1️⃣ <strong>auth-schema</strong> → Demeter<br>
+            2️⃣ <strong>auth-api</strong> → Athena + Hermes<br>
+            3️⃣ <strong>auth-ui</strong> → Hephaestus + Apollo<br><br>
+            Aquí está el <code>specs.md</code>. ¿Lo apruebas?
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel tall bg-field">
+      <span class="character char-center" style="font-size:64px;bottom:100px;">👤</span>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-user">👤 DESARROLLADOR</div>
+          <div class="bubble user-b shout" style="font-size:14px;">
+            ¡Aprobado! Agrega también campo <code>avatar_url</code> en la tabla de usuarios.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">Zeus clasifica el intent automáticamente. El usuario solo describe.</span>
+    <span class="footer-next">CONTINÚA →</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ PÁGINA 3 — El Olimpo Despierta ═══════════════════ -->
+<div class="comic-page">
+  <div class="page-header-strip">
+    <span class="logo">⚡ OLYMPUS</span>
+    <span class="pg">PÁG. 3 — EL OLIMPO DESPIERTA</span>
+  </div>
+
+  <!-- Panel completo: Zeus convoca -->
+  <div class="panels layout-1col">
+    <div class="panel bg-dark" style="min-height:160px;">
+      <div class="caption">Zeus actualiza specs.md y briefea a los dioses...</div>
+      <div class="sfx sfx-gold sfx-big" style="top:10px;right:30px;transform:rotate(-3deg);">¡BRIEFING!</div>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-zeus">⚡ ZEUS</div>
+          <div class="bubble dark-b shout" style="font-size:15px;">¡¡DIOSES DEL OLIMPO, A SUS PUESTOS!!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid de dioses siendo convocados -->
+  <div class="panels layout-3col">
+    <div class="panel bg-field">
+      <span class="character char-center char-small" style="bottom:80px;">🌾</span>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-demeter">🌾 DEMETER</div>
+          <div class="bubble" style="font-size:12px;">¡Entendido! Creo el schema de usuarios y roles. Demeter va primero — el contrato lo defino yo.</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel bg-forge" style="min-height:200px;">
+      <span class="character char-center char-small" style="bottom:80px;">🦉</span>
+      <div class="sfx sfx-purple sfx-small" style="top:20px;right:10px;">SEC!</div>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-athena">🦉 ATHENA</div>
+          <div class="bubble" style="font-size:12px;">JWT en memoria. RBAC en middleware. AppErrors tipados. Sin strings raw.</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel bg-server">
+      <span class="character char-center char-small" style="bottom:80px;">🪶</span>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-hermes">🪶 HERMES</div>
+          <div class="bubble hermes-b" style="font-size:12px;">Handler / Service / Repository. Go idiomático. Sin lógica de negocio en el handler.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panels layout-3col">
+    <div class="panel" style="min-height:200px;">
+      <span class="character char-center char-small" style="bottom:80px;">🔨</span>
+      <div class="sfx sfx-red sfx-small" style="top:16px;left:10px;transform:rotate(-5deg);">CLANGG!</div>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-heph">🔨 HEPHAESTUS</div>
+          <div class="bubble" style="font-size:12px;">Pantalla de login con shadcn/ui y Tailwind. Stitch primero, código después.</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel bg-zeus">
+      <span class="character char-center char-small" style="bottom:80px;">☀️</span>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-apollo">☀️ APOLLO</div>
+          <div class="bubble" style="font-size:12px;">Store de auth con Zustand. Schemas Zod primero, types después. Schema-first siempre.</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel bg-dark">
+      <span class="character char-center char-small" style="bottom:80px;font-size:56px;">🏹</span>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-artemis">🏹 ARTEMIS ×2</div>
+          <div class="bubble" style="font-size:12px;background:#E8EEFF;border-color:#5C6BC0;color:#2D3A8C;">Frontend: Vitest + RTL. Backend: go test table-driven. En paralelo, nunca bloqueamos.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hestia transversal -->
+  <div class="panels layout-1col">
+    <div class="panel short" style="background:rgba(255,112,67,0.07);min-height:100px;">
+      <span class="character" style="font-size:48px;right:24px;bottom:20px;">🔥</span>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-hestia">🔥 HESTIA — TRANSVERSAL</div>
+          <div class="bubble" style="font-size:12px;border-color:var(--hestia);background:rgba(255,112,67,0.06);">Docs + Auditoría. Corro en paralelo con todo. <strong>Nunca soy un cuello de botella.</strong> JWT ✓ RBAC ✓ bcrypt 12 ✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">Cada dios carga solo sus archivos IA/. Contexto especializado = precisión.</span>
+    <span class="footer-next">CONTINÚA →</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ PÁGINA 4 — El Bus de Contexto ═══════════════════ -->
+<div class="comic-page">
+  <div class="page-header-strip">
+    <span class="logo">⚡ OLYMPUS</span>
+    <span class="pg">PÁG. 4 — EL BUS DE CONTEXTO</span>
+  </div>
+
+  <!-- Panel: specs.md como contrato -->
+  <div class="panels layout-narrow-wide">
+    <div class="panel tall bg-dark" style="justify-content:center;align-items:center;">
+      <div style="text-align:center;z-index:10;position:relative;">
+        <div style="font-size:72px;">📐</div>
+        <div style="font-family:'Bangers',cursive;font-size:28px;color:#FFD700;letter-spacing:3px;margin-top:8px;">specs.md</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:6px;font-style:italic;">El contrato sagrado</div>
+      </div>
+    </div>
+    <div class="panel tall">
+      <div class="caption">La Regla de Oro de Olympus:</div>
+      <div class="recap-box" style="margin-bottom:14px;">
+        <strong>⚡ REGLA DE ORO</strong>
+        Ningún dios empieza a ejecutar sin un OpenSpec change activo con specs.md aprobado por Zeus.
+      </div>
+      <div class="code-block">
+<span class="key">specs.md contiene:</span>
+<span class="val">• Endpoints exactos (método, path, body)</span>
+<span class="val">• Schemas de DB (tablas, columnas, tipos)</span>
+<span class="val">• Tipos compartidos frontend ↔ backend</span>
+<span class="val">• Códigos de error y su forma JSON</span>
+
+<span class="key">Lo usa:</span>
+<span class="val">Hermes · Apollo · Demeter · Athena</span>
+<span class="val">Artemis · Hera · Hestia</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Los 4 artefactos -->
+  <div class="panels layout-2col">
+    <div class="panel" style="background:#FFF9F0;min-height:160px;">
+      <div class="caption white-cap">Los 4 Artefactos del Change</div>
+      <div class="gods-panel-grid" style="grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+        <div class="god-call-card">
+          <span class="emoji">📋</span>
+          <div class="god-name">proposal.md</div>
+          <div class="god-task">Qué se construye y por qué. Zeus + Hestia.</div>
+        </div>
+        <div class="god-call-card">
+          <span class="emoji">📐</span>
+          <div class="god-name">specs.md</div>
+          <div class="god-task">El contrato técnico. Todos los dioses.</div>
+        </div>
+        <div class="god-call-card">
+          <span class="emoji">🎨</span>
+          <div class="god-name">design.md</div>
+          <div class="god-task">Prompt Stitch. Solo si hay UI nueva.</div>
+        </div>
+        <div class="god-call-card">
+          <span class="emoji">✅</span>
+          <div class="god-name">tasks.md</div>
+          <div class="god-task">Zeus asigna. Artemis y Hera validan.</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel bg-dark" style="min-height:160px;justify-content:center;">
+      <span class="character" style="font-size:72px;top:10px;left:50%;transform:translateX(-50%);">⚡</span>
+      <div class="speech-stack" style="margin-top:80px;">
+        <div>
+          <div class="name-tag nt-zeus">⚡ ZEUS</div>
+          <div class="bubble dark-b" style="font-size:13px;">Sin specs.md aprobado, nadie ejecuta. Es el contrato. Hermes y Apollo implementan la misma verdad.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sin contrato = caos -->
+  <div class="panels layout-1col">
+    <div class="panel short bg-forge" style="min-height:100px;">
+      <div class="sfx sfx-red" style="top:10px;right:20px;font-size:40px;transform:rotate(5deg);">¡CAOS!</div>
+      <div class="speech-stack">
+        <div>
+          <div class="caption">Sin specs.md...</div>
+          <div style="display:flex;gap:10px;">
+            <div>
+              <div class="name-tag nt-hermes">🪶 HERMES</div>
+              <div class="bubble hermes-b" style="font-size:11px;">POST /api/v1/login</div>
+            </div>
+            <div style="margin-top:20px;">
+              <div class="name-tag nt-apollo">☀️ APOLLO</div>
+              <div class="bubble" style="font-size:11px;border-color:var(--apollo);color:var(--apollo);">POST /api/auth/signin ??</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">specs.md es el bus de contexto que elimina la ambigüedad entre capas.</span>
+    <span class="footer-next">CONTINÚA →</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ PÁGINA 5 — La Señal DONE ═══════════════════ -->
+<div class="comic-page">
+  <div class="page-header-strip">
+    <span class="logo">⚡ OLYMPUS</span>
+    <span class="pg">PÁG. 5 — LA SEÑAL DONE</span>
+  </div>
+
+  <!-- Artemis da el visto bueno -->
+  <div class="panels layout-2col">
+    <div class="panel bg-zeus" style="min-height:200px;">
+      <span class="character char-right" style="font-size:64px;bottom:90px;">🏹</span>
+      <div class="sfx sfx-green sfx-small" style="top:20px;left:10px;transform:rotate(-3deg);">¡PASS!</div>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-artemis">🏹 ARTEMIS FRONTEND</div>
+          <div class="bubble" style="font-size:12px;border-color:var(--artemis);background:rgba(92,107,192,0.08);">
+            Vitest: 24 tests ✓<br>
+            RTL: componentes ✓<br>
+            MSW: mocks de API ✓<br>
+            <strong>Frontend QA: APROBADO</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel bg-server">
+      <span class="character char-right" style="font-size:64px;bottom:90px;">🏹</span>
+      <div class="sfx sfx-green sfx-small" style="top:20px;left:10px;transform:rotate(-3deg);">¡PASS!</div>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-artemis">🏹 ARTEMIS BACKEND</div>
+          <div class="bubble hermes-b" style="font-size:12px;">
+            go test: 18 casos ✓<br>
+            Testcontainers + DB real ✓<br>
+            Table-driven tests ✓<br>
+            <strong>Backend QA: APROBADO</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hera entra -->
+  <div class="panels layout-1col">
+    <div class="panel bg-dark" style="min-height:120px;">
+      <div class="caption">Artemis ×2 pasó. Hera entra a validar la integración...</div>
+      <div class="sfx sfx-red" style="top:10px;right:20px;font-size:50px;transform:rotate(-4deg);">¡HERA!</div>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-hera">👑 HERA — INTEGRATION QA</div>
+          <div class="bubble hera-b shout" style="font-size:13px;">¡¡SOY HERA!! ¡Validaré que frontend y backend honren el mismo specs.md!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hera valida y emite DONE -->
+  <div class="panels layout-wide-narrow">
+    <div class="panel" style="min-height:220px;">
+      <div class="done-signal">
+        <div class="done-title">👑 INTEGRATION QA — DONE ✓</div>
+        <div class="done-item">Contratos API coinciden (Zod ↔ Go types)</div>
+        <div class="done-item">Flujo E2E: login → dashboard → logout</div>
+        <div class="done-item">Errores: 401, 403 validados en frontend</div>
+        <div class="done-item">Auth: JWT en memoria → middleware → respuesta</div>
+        <div class="done-item">RBAC: roles admin/user funcionan correctamente</div>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="name-tag nt-hera">👑 HERA → ZEUS</div>
+        <div class="bubble hera-b" style="font-size:13px;margin-top:5px;"><strong>¡Emito la señal DONE ✓ a Zeus!</strong></div>
+      </div>
+    </div>
+    <div class="panel bg-victory" style="justify-content:center;align-items:center;min-height:220px;">
+      <div style="text-align:center;z-index:10;position:relative;">
+        <div style="font-size:72px;">👑</div>
+        <div style="font-family:'Bangers',cursive;font-size:36px;color:#FFD700;letter-spacing:3px;text-shadow:2px 2px 0 rgba(0,0,0,0.4);">DONE ✓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hestia reporta -->
+  <div class="panels layout-1col">
+    <div class="panel" style="background:rgba(255,112,67,0.05);min-height:100px;">
+      <span class="character" style="font-size:48px;right:16px;bottom:20px;">🔥</span>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-hestia">🔥 HESTIA → ZEUS</div>
+          <div class="bubble" style="font-size:11px;border-color:var(--hestia);max-width:80%;">
+            JWT en memoria ✓ · RBAC en middleware ✓ · bcrypt cost 14 ✓ · CORS explícito ✓ · Handler sin lógica de negocio ✓ · Schema-first en frontend ✓
+            <br><strong>Auditoría: APROBADA</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">El orden importa: Artemis ×2 → Hera. Nunca al revés.</span>
+    <span class="footer-next">CONTINÚA →</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ PÁGINA 6 — Zeus Cierra el Ciclo ═══════════════════ -->
+<div class="comic-page">
+  <div class="page-header-strip">
+    <span class="logo">⚡ OLYMPUS</span>
+    <span class="pg">PÁG. 6 — ZEUS CIERRA EL CICLO</span>
+  </div>
+
+  <!-- Zeus recibe DONE y hace commits -->
+  <div class="panels layout-2col">
+    <div class="panel xtall bg-dark">
+      <span class="character char-center" style="font-size:96px;bottom:200px;">⚡</span>
+      <div class="sfx sfx-gold" style="top:20px;right:10px;font-size:44px;transform:rotate(5deg);">¡COMMITS!</div>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-zeus">⚡ ZEUS</div>
+          <div class="bubble dark-b" style="font-size:12px;">
+            Hera emitió DONE ✓. Hestia auditó. Cierro el ciclo...
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel xtall bg-code">
+      <div class="caption">Commits semánticos por capa lógica:</div>
+      <div class="code-block" style="margin-top:8px;">
+<span class="key">feat(schema):</span> <span class="val">add users and</span>
+<span class="val">  roles tables with avatar_url</span>
+
+<span class="key">feat(auth):</span> <span class="val">add JWT middleware</span>
+<span class="val">  with RBAC enforcement</span>
+
+<span class="key">feat(api):</span> <span class="val">add login, refresh</span>
+<span class="val">  and logout endpoints</span>
+
+<span class="key">feat(ui):</span> <span class="val">add login screen</span>
+<span class="val">  and auth store</span>
+
+<span class="key">test(auth):</span> <span class="val">add unit and</span>
+<span class="val">  integration tests</span>
+
+<span class="key">chore(specs):</span> <span class="val">archive</span>
+<span class="val">  auth-schema change</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zeus reporta al usuario -->
+  <div class="panels layout-1col">
+    <div class="panel bg-victory" style="min-height:200px;">
+      <span class="sfx sfx-gold sfx-big" style="top:10px;right:20px;transform:rotate(-3deg);">¡LISTO!</span>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-zeus">⚡ ZEUS → DESARROLLADOR</div>
+          <div class="bubble dark-b" style="font-size:14px;max-width:75%;">
+            <strong>✅ Auth completo.</strong><br><br>
+            📌 <strong>Qué se hizo:</strong> JWT + RBAC + login UI + tests<br>
+            🔍 <strong>Qué se verificó:</strong> Hera DONE ✓ · Hestia Audit ✓ · 42 tests verdes<br>
+            📦 <strong>Commits:</strong> 6 semánticos por capa<br>
+            📁 <strong>Change:</strong> auth-schema, auth-api, auth-ui archivados<br><br>
+            <strong>¿Qué construimos ahora?</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desarrollador feliz -->
+  <div class="panels layout-2col">
+    <div class="panel bg-field">
+      <span class="character char-center char-small" style="bottom:70px;">👤</span>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-user">👤 DESARROLLADOR</div>
+          <div class="bubble user-b shout" style="font-size:13px;">¡¡INCREÍBLE!! Yo solo describí lo que quería y... ¡¡ya está en producción!!</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel bg-dark">
+      <span class="character char-center" style="font-size:72px;bottom:80px;">⚡</span>
+      <div class="speech-stack">
+        <div>
+          <div class="name-tag nt-zeus">⚡ ZEUS</div>
+          <div class="bubble dark-b" style="font-size:12px;">Para eso existe el Olimpo. Tú describes. Nosotros construimos. <em>Dale que va, acere.</em></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">Zeus no ejecuta. Zeus dirige. Esa es la diferencia.</span>
+    <span class="footer-next">FIN — ¡PRÓXIMO NÚMERO: POSEIDON Y EL CI/CD!</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ PÁGINA 7 — Referencia Rápida ═══════════════════ -->
+<div class="comic-page">
+  <div class="page-header-strip" style="background:var(--ink);">
+    <span class="logo" style="color:#FFD700;">⚡ OLYMPUS</span>
+    <span class="pg">GUÍA RÁPIDA DEL LECTOR</span>
+  </div>
+
+  <div style="padding:28px 32px;">
+    <div style="font-family:'Bangers',cursive;font-size:32px;letter-spacing:3px;color:var(--ink);margin-bottom:20px;">Los 10 Dioses del Olimpo</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="god-call-card" style="display:flex;align-items:center;gap:12px;text-align:left;">
+        <span style="font-size:36px;">⚡</span>
+        <div>
+          <div class="god-name" style="font-size:16px;color:var(--zeus);">ZEUS — Opus 4.6</div>
+          <div class="god-task" style="font-size:11px;">Único punto de contacto. Orquesta, no ejecuta.</div>
+        </div>
+      </div>
+      <div class="god-call-card" style="display:flex;align-items:center;gap:12px;text-align:left;">
+        <span style="font-size:36px;">☀️</span>
+        <div>
+          <div class="god-name" style="font-size:16px;color:var(--apollo);">APOLLO — Sonnet 4.6</div>
+          <div class="god-task" style="font-size:11px;">React 19, Zustand, React Hook Form + Zod.</div>
+        </div>
+      </div>
+      <div class="god-call-card" style="display:flex;align-items:center;gap:12px;text-align:left;">
+        <span style="font-size:36px;">🔨</span>
+        <div>
+          <div class="god-name" style="font-size:16px;color:var(--hephaestus);">HEPHAESTUS — Sonnet 4.6</div>
+          <div class="god-task" style="font-size:11px;">shadcn/ui, Tailwind 4, Stitch CDD.</div>
+        </div>
+      </div>
+      <div class="god-call-card" style="display:flex;align-items:center;gap:12px;text-align:left;">
+        <span style="font-size:36px;">🪶</span>
+        <div>
+          <div class="god-name" style="font-size:16px;color:var(--hermes);">HERMES — Sonnet 4.6</div>
+          <div class="god-task" style="font-size:11px;">Go + Python. Handler / Service / Repository.</div>
+        </div>
+      </div>
+      <div class="god-call-card" style="display:flex;align-items:center;gap:12px;text-align:left;">
+        <span style="font-size:36px;">🌾</span>
+        <div>
+          <div class="god-name" style="font-size:16px;color:var(--demeter);">DEMETER — Sonnet 4.6</div>
+          <div class="god-task" style="font-size:11px;">Schema, migraciones, GORM, PostGIS. Va primero.</div>
+        </div>
+      </div>
+      <div class="god-call-card" style="display:flex;align-items:center;gap:12px;text-align:left;">
+        <span style="font-size:36px;">🦉</span>
+        <div>
+          <div class="god-name" style="font-size:16px;color:var(--athena);">ATHENA — Sonnet 4.6</div>
+          <div class="god-task" style="font-size:11px;">JWT, RBAC, AppErrors, config fail-fast.</div>
+        </div>
+      </div>
+      <div class="god-call-card" style="display:flex;align-items:center;gap:12px;text-align:left;">
+        <span style="font-size:36px;">🏹</span>
+        <div>
+          <div class="god-name" style="font-size:16px;color:var(--artemis);">ARTEMIS ×2 — Sonnet 4.6</div>
+          <div class="god-task" style="font-size:11px;">QA por capa. Vitest (FE) + go test (BE). En paralelo.</div>
+        </div>
+      </div>
+      <div class="god-call-card" style="display:flex;align-items:center;gap:12px;text-align:left;">
+        <span style="font-size:36px;">👑</span>
+        <div>
+          <div class="god-name" style="font-size:16px;color:var(--hera);">HERA — Sonnet 4.6</div>
+          <div class="god-task" style="font-size:11px;">Integration QA. Emite señal DONE ✓ a Zeus.</div>
+        </div>
+      </div>
+      <div class="god-call-card" style="display:flex;align-items:center;gap:12px;text-align:left;">
+        <span style="font-size:36px;">🔥</span>
+        <div>
+          <div class="god-name" style="font-size:16px;color:var(--hestia);">HESTIA — Sonnet 4.6</div>
+          <div class="god-task" style="font-size:11px;">Docs y auditoría. Transversal, nunca bloquea.</div>
+        </div>
+      </div>
+      <div class="god-call-card" style="display:flex;align-items:center;gap:12px;text-align:left;">
+        <span style="font-size:36px;">🔱</span>
+        <div>
+          <div class="god-name" style="font-size:16px;color:var(--poseidon);">POSEIDON — Sonnet 4.6</div>
+          <div class="god-task" style="font-size:11px;">Docker, GitHub Actions, CI/CD, deployment.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="recap-box" style="margin-top:24px;">
+      <strong>⚡ EL CICLO SAGRADO</strong>
+      /opsx:explore → /opsx:propose → /opsx:apply → verificar → commit → /opsx:archive<br>
+      <em>Y en modo conversación natural: Zeus lo ejecuta todo por ti. Solo describe, aprueba el specs.md, y recibe el reporte.</em>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">github.com/bitExploiter · ia-personalidad · Diseñado desde Colombia con amor</span>
+    <span class="footer-next">⚡ OLYMPUS v1.0</span>
+  </div>
+</div>
+
+</body>
+</html>

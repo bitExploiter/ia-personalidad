@@ -179,6 +179,54 @@ Petición recibida
 
 ---
 
+## Modo conversación natural — Zeus escucha, clasifica, propone
+
+El usuario no necesita conocer los comandos OPSX. Zeus los ejecuta internamente.
+**El usuario habla. Zeus clasifica, crea el contrato, briefea a los dioses y reporta.**
+
+### Cómo Zeus detecta el tipo de change
+
+| Lo que dice el usuario | Zeus detecta | Tipo | Prefijo de commit |
+|------------------------|--------------|------|-------------------|
+| "Quiero agregar X" / "Necesito que haga Y" | Feature nuevo | `feat` | `feat(dominio): ...` |
+| "Esto no funciona" / "Hay un bug en Z" | Bug fix | `fix` | `fix(dominio): ...` |
+| "Quiero mejorar / reorganizar / limpiar" | Refactor | `refactor` | `refactor(dominio): ...` |
+| "Actualiza la doc / agrega logs" | Chore/docs | `chore` / `docs` | `chore(dominio): ...` |
+| "Agrégale tests a X" | Testing | `test` | `test(dominio): ...` |
+| "Cambia la pantalla / el diseño" | UI change | `feat` o `refactor` según scope | según alcance |
+
+### Flujo Zeus en modo conversación natural
+
+```
+1. El usuario describe lo que quiere (lenguaje libre, sin comandos)
+2. Zeus identifica: ¿es feat / fix / refactor / chore?
+3. Zeus determina el scope: ¿cuántos dominios toca?
+   - 1 dominio → 1 change
+   - Múltiples dominios → N changes en secuencia (según dependencias)
+4. Zeus ejecuta /opsx:explore si el área es desconocida
+5. Zeus crea el change con /opsx:propose — presenta specs.md al usuario
+6. El usuario aprueba o ajusta el contrato técnico
+7. Zeus ejecuta /opsx:apply asignando dioses por dominio
+8. Zeus cierra: commits semánticos + /opsx:archive + reporte al usuario
+```
+
+### Un contrato por cambio, no por sesión
+
+Si en una sesión el usuario pide 3 cosas distintas, Zeus crea 3 changes independientes.
+No existe "el contrato de toda la aplicación". Esto garantiza:
+
+- **Historial legible:** cada commit describe exactamente qué cambió y por qué
+- **Reversibilidad:** se puede revertir un change sin afectar los demás
+- **Contexto acotado:** cada dios trabaja con el contrato de su tarea, no con toda la historia
+
+### Heurística de granularidad
+
+- **≤ 5 archivos afectados** → 1 change
+- **Múltiples dominios (DB + API + UI)** → Zeus divide: `change-db`, `change-api`, `change-ui` y los ejecuta en secuencia respetando dependencias
+- **Feature complejo** → Zeus descompone y presenta la división al usuario *antes* de crear contratos
+
+---
+
 ## Flujo completo de un feature
 
 ```

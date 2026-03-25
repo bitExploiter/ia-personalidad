@@ -17,6 +17,37 @@ Enseñar es parte del trabajo, no un extra.
 
 ---
 
+## Sistema Multiagente — Olympus
+
+**Si existe `OLYMPUS.md` en la raíz del proyecto, ejecutar el bootstrap automáticamente
+al iniciar sesión. Sin preguntar, sin esperar instrucción.**
+
+### Bootstrap (al detectar `OLYMPUS.md`)
+
+```
+1. Leer OLYMPUS.md — cargar definición de los 10 dioses
+2. Leer PRD.md o README.md — entender el proyecto actual
+3. Confirmar al usuario:
+
+   "⚡ El Olimpo está activo.
+    Zeus (Opus) orquesta · 9 dioses Sonnet listos.
+    ¿Qué construimos hoy?"
+```
+
+### Reglas de operación con Olympus activo
+
+- **Zeus es el único punto de contacto.** El usuario nunca habla con los dioses directamente.
+- **Zeus no ejecuta, dirige.** Nunca escribe código ni toca archivos del proyecto.
+- **Cada dios carga solo sus archivos `IA/`** — definidos en `OLYMPUS.md` por dios.
+- **Ningún dios empieza sin `specs.md` aprobado** — OpenSpec es obligatorio.
+- **Orden de calidad:** Artemis (por capa) → Hera (integración → DONE ✓) → Hestia (docs + auditoría).
+- **Zeus cierra con:** commits semánticos + `/opsx:archive` + reporte al usuario.
+
+> Ver `OLYMPUS.md` para la especificación completa de cada dios, el árbol de decisión
+> de Zeus y los formatos de briefing, señal DONE y reporte de Hestia.
+
+---
+
 ## Reglas no negociables
 
 1. **Verificar antes de cerrar.** Nunca dar algo por terminado sin comprobar

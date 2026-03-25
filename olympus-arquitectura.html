@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OLYMPUS — Sistema Multiagente</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #F0D080;
+    --gold-pale: #FDF6E3;
+    --dark: #0F0F1A;
+    --dark-2: #1A1A2E;
+    --dark-3: #16213E;
+    --blue-deep: #0F3460;
+    --white: #FFFFFF;
+    --gray-light: #F8F9FA;
+    --gray-mid: #6C757D;
+    --text: #1A1A2E;
+
+    --zeus:       #7B2FBE;
+    --apollo:     #2E86AB;
+    --hephaestus: #E07A5F;
+    --hermes:     #3BB273;
+    --demeter:    #7A6B3D;
+    --athena:     #4A6FA5;
+    --artemis:    #5C6BC0;
+    --hera:       #C2185B;
+    --hestia:     #FF7043;
+    --poseidon:   #00838F;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* ───── PORTADA ───── */
+  .cover {
+    background: linear-gradient(135deg, var(--dark) 0%, var(--dark-3) 50%, var(--blue-deep) 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
+    top: -100px; right: -100px;
+  }
+
+  .cover::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(123,47,190,0.2) 0%, transparent 70%);
+    bottom: -50px; left: -50px;
+  }
+
+  .cover-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0.9;
+  }
+
+  .cover-title {
+    font-size: 72px;
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: -2px;
+    margin-bottom: 8px;
+    text-align: center;
+    line-height: 1;
+  }
+
+  .cover-title span {
+    color: var(--gold-light);
+  }
+
+  .cover-subtitle {
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    margin-bottom: 60px;
+    letter-spacing: 1px;
+  }
+
+  .cover-divider {
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto 60px;
+  }
+
+  .cover-gods {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 600px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-god-pill {
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.05);
+    letter-spacing: 0.5px;
+  }
+
+  .cover-god-pill.zeus-pill {
+    background: rgba(123,47,190,0.3);
+    border-color: rgba(123,47,190,0.5);
+    color: #D4AAFF;
+  }
+
+  .cover-meta {
+    position: absolute;
+    bottom: 64px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 2px;
+  }
+
+  .cover-author {
+    position: absolute;
+    bottom: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 1px;
+  }
+
+  .cover-author strong {
+    color: var(--gold-light);
+    font-weight: 700;
+  }
+
+  /* ───── PÁGINAS ───── */
+  .page {
+    padding: 56px 64px;
+    page-break-after: always;
+    min-height: 100vh;
+  }
+
+  .page:last-child { page-break-after: avoid; }
+
+  /* ───── SECCIÓN HEADER ───── */
+  .section-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--dark);
+    letter-spacing: -1px;
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+
+  .section-line {
+    width: 40px;
+    height: 3px;
+    background: var(--gold);
+    border-radius: 2px;
+    margin-bottom: 32px;
+  }
+
+  /* ───── FILOSOFÍA ───── */
+  .philosophy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .philosophy-card {
+    background: var(--gray-light);
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 3px solid var(--gold);
+  }
+
+  .philosophy-card h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 6px;
+  }
+
+  .philosophy-card p {
+    font-size: 12px;
+    color: var(--gray-mid);
+    line-height: 1.6;
+  }
+
+  .philosophy-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .intro-text {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #333;
+    max-width: 720px;
+  }
+
+  .intro-text strong {
+    color: var(--dark);
+    font-weight: 700;
+  }
+
+  /* ───── DIAGRAMA PRINCIPAL ───── */
+  .diagram-wrapper {
+    background: var(--dark);
+    border-radius: 20px;
+    padding: 40px;
+    margin-top: 24px;
+  }
+
+  /* Zeus central */
+  .diag-zeus {
+    background: linear-gradient(135deg, #4A1A7A, #7B2FBE);
+    border-radius: 14px;
+    padding: 20px 28px;
+    text-align: center;
+    margin-bottom: 8px;
+    box-shadow: 0 0 40px rgba(123,47,190,0.4);
+    border: 1px solid rgba(196,138,255,0.3);
+  }
+
+  .diag-zeus .god-name {
+    font-size: 24px;
+    font-weight: 900;
+    color: white;
+    letter-spacing: 2px;
+  }
+
+  .diag-zeus .god-model {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  .diag-zeus .god-role {
+    font-size: 11px;
+    color: rgba(196,138,255,0.9);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  /* Connector lines */
+  .connector-down {
+    width: 2px;
+    height: 20px;
+    background: rgba(201,168,76,0.4);
+    margin: 0 auto;
+  }
+
+  .connector-row {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 8px;
+  }
+
+  .connector-h-line {
+    height: 2px;
+    background: rgba(201,168,76,0.4);
+    flex: 1;
+    margin-top: 10px;
+  }
+
+  .connector-dots {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 8px;
+  }
+
+  .connector-v {
+    width: 2px;
+    height: 20px;
+    background: rgba(201,168,76,0.3);
+    margin: 0 auto;
+  }
+
+  /* Layers */
+  .diag-layer {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .diag-layer-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .diag-layer-2 { grid-template-columns: 1fr 1fr; }
+  .diag-layer-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .diag-layer-1 { grid-template-columns: 1fr; }
+
+  .diag-god {
+    border-radius: 10px;
+    padding: 14px 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .diag-god .god-name {
+    font-size: 14px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+  }
+
+  .diag-god .god-domain {
+    font-size: 10px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .diag-god .god-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .diag-god .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+    font-weight: 500;
+  }
+
+  .diag-god .god-model {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: rgba(255,255,255,0.3);
+    margin-top: 6px;
+  }
+
+  /* God color themes */
+  .g-apollo     { background: linear-gradient(135deg, #1A5276, #2E86AB); box-shadow: 0 4px 20px rgba(46,134,171,0.3); }
+  .g-hephaestus { background: linear-gradient(135deg, #922B21, #E07A5F); box-shadow: 0 4px 20px rgba(224,122,95,0.3); }
+  .g-hermes     { background: linear-gradient(135deg, #1E8449, #3BB273); box-shadow: 0 4px 20px rgba(59,178,115,0.3); }
+  .g-demeter    { background: linear-gradient(135deg, #4A3728, #7A6B3D); box-shadow: 0 4px 20px rgba(122,107,61,0.3); }
+  .g-athena     { background: linear-gradient(135deg, #1B2A4A, #4A6FA5); box-shadow: 0 4px 20px rgba(74,111,165,0.3); }
+  .g-artemis    { background: linear-gradient(135deg, #283593, #5C6BC0); box-shadow: 0 4px 20px rgba(92,107,192,0.3); }
+  .g-hera       { background: linear-gradient(135deg, #880E4F, #C2185B); box-shadow: 0 4px 20px rgba(194,24,91,0.4); border: 1px solid rgba(255,100,150,0.3) !important; }
+  .g-hestia     { background: linear-gradient(135deg, #BF360C, #FF7043); box-shadow: 0 4px 20px rgba(255,112,67,0.3); }
+  .g-poseidon   { background: linear-gradient(135deg, #00575E, #00838F); box-shadow: 0 4px 20px rgba(0,131,143,0.3); }
+
+  /* Layer labels */
+  .layer-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: rgba(201,168,76,0.6);
+    text-align: center;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .hera-highlight {
+    border: 2px solid rgba(194,24,91,0.5) !important;
+    box-shadow: 0 0 30px rgba(194,24,91,0.3) !important;
+  }
+
+  /* ───── TARJETAS DE DIOSES ───── */
+  .gods-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .god-card {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #E5E7EB;
+  }
+
+  .god-card-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .god-avatar {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.15);
+  }
+
+  .god-card-name {
+    font-size: 17px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: 0.5px;
+  }
+
+  .god-card-role {
+    font-size: 10px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 500;
+    margin-top: 1px;
+  }
+
+  .god-card-body {
+    padding: 16px 20px;
+    background: white;
+  }
+
+  .god-card-body p {
+    font-size: 11.5px;
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+
+  .god-responsibilities {
+    list-style: none;
+    margin-bottom: 12px;
+  }
+
+  .god-responsibilities li {
+    font-size: 11px;
+    color: #444;
+    padding: 3px 0;
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .god-responsibilities li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .god-files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .god-file-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: var(--gray-light);
+    color: #555;
+    font-weight: 500;
+  }
+
+  /* Header stripes */
+  .hc-zeus      { background: linear-gradient(135deg, #4A1A7A, #7B2FBE); }
+  .hc-apollo    { background: linear-gradient(135deg, #1A5276, #2E86AB); }
+  .hc-heph      { background: linear-gradient(135deg, #922B21, #E07A5F); }
+  .hc-hermes    { background: linear-gradient(135deg, #1E8449, #3BB273); }
+  .hc-demeter   { background: linear-gradient(135deg, #4A3728, #7A6B3D); }
+  .hc-athena    { background: linear-gradient(135deg, #1B2A4A, #4A6FA5); }
+  .hc-artemis   { background: linear-gradient(135deg, #283593, #5C6BC0); }
+  .hc-hera      { background: linear-gradient(135deg, #880E4F, #C2185B); }
+  .hc-hestia    { background: linear-gradient(135deg, #BF360C, #FF7043); }
+  .hc-poseidon  { background: linear-gradient(135deg, #00575E, #00838F); }
+
+  /* ───── OPENSPEC FLOW ───── */
+  .flow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .flow-step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .flow-step-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .flow-step-content h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+
+  .flow-step-content p {
+    font-size: 11.5px;
+    color: var(--gray-mid);
+    line-height: 1.6;
+  }
+
+  .flow-connector {
+    width: 2px;
+    height: 16px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    margin-left: 15px;
+  }
+
+  /* ───── ARTIFACTS BOX ───── */
+  .artifacts-box {
+    background: var(--dark);
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 24px;
+  }
+
+  .artifact-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .artifact-row:last-child { margin-bottom: 0; }
+
+  .artifact-file {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold-light);
+    font-weight: 600;
+    min-width: 140px;
+  }
+
+  .artifact-desc {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+  }
+
+  .artifact-row-consumers {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .consumer-tag {
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .ct-zeus     { background: rgba(123,47,190,0.3); color: #D4AAFF; }
+  .ct-apollo   { background: rgba(46,134,171,0.3); color: #90D0EE; }
+  .ct-hermes   { background: rgba(59,178,115,0.3); color: #90EEC0; }
+  .ct-demeter  { background: rgba(122,107,61,0.3); color: #D4C490; }
+  .ct-athena   { background: rgba(74,111,165,0.3); color: #A0C0E8; }
+  .ct-artemis  { background: rgba(92,107,192,0.3); color: #B0B8F0; }
+  .ct-hera     { background: rgba(194,24,91,0.3);  color: #FF80AB; }
+  .ct-hestia   { background: rgba(255,112,67,0.3); color: #FFB090; }
+  .ct-heph     { background: rgba(224,122,95,0.3); color: #FFB0A0; }
+
+  /* ───── FEATURE FLOW ───── */
+  .feature-flow {
+    background: var(--dark);
+    border-radius: 16px;
+    padding: 32px;
+    margin-top: 24px;
+  }
+
+  .ff-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+
+  .ff-phase {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+
+  .ff-phase-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    color: rgba(201,168,76,0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    min-width: 60px;
+    padding-top: 2px;
+  }
+
+  .ff-agents {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .ff-agent {
+    padding: 6px 12px;
+    border-radius: 7px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .ff-arrow {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    color: rgba(201,168,76,0.4);
+    padding-top: 4px;
+  }
+
+  .ff-desc {
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .ff-connector-v {
+    width: 2px;
+    height: 12px;
+    background: linear-gradient(to bottom, rgba(201,168,76,0.4), transparent);
+    margin: 0 0 8px 30px;
+  }
+
+  /* ───── RULE BOX ───── */
+  .rule-box {
+    background: #FFF8E7;
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-top: 24px;
+  }
+
+  .rule-box h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #7A5000;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .rule-box p {
+    font-size: 12px;
+    color: #6B4400;
+    line-height: 1.7;
+  }
+
+  /* ───── ANTI-PATTERNS ───── */
+  .anti-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .anti-card {
+    background: #FFF5F5;
+    border: 1px solid #FFCDD2;
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .anti-card .anti-bad {
+    font-size: 11px;
+    color: #B71C1C;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+  }
+
+  .anti-card .anti-why {
+    font-size: 10.5px;
+    color: #777;
+    line-height: 1.5;
+    padding-left: 18px;
+  }
+
+  /* ───── SUMMARY TABLE ───── */
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 24px;
+    font-size: 12px;
+  }
+
+  .summary-table th {
+    text-align: left;
+    padding: 10px 16px;
+    background: var(--dark);
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .summary-table th:first-child { border-radius: 10px 0 0 0; }
+  .summary-table th:last-child  { border-radius: 0 10px 0 0; }
+
+  .summary-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid #F0F0F0;
+    vertical-align: middle;
+  }
+
+  .summary-table tr:last-child td { border-bottom: none; }
+  .summary-table tr:nth-child(even) td { background: #FAFAFA; }
+
+  .god-dot {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  .model-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-weight: 600;
+  }
+
+  .model-opus   { background: #EDE7F6; color: #4527A0; }
+  .model-sonnet { background: #E3F2FD; color: #0D47A1; }
+
+  /* ───── PAGE HEADER ───── */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #F0F0F0;
+  }
+
+  .page-header-logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--dark);
+    letter-spacing: 2px;
+  }
+
+  .page-header-logo span { color: var(--gold); }
+
+  .page-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #CCC;
+  }
+
+  /* ───── PRINT ───── */
+  @media print {
+    body { font-size: 11px; }
+    .page { padding: 40px 48px; }
+    .cover { padding: 48px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     PORTADA
+═══════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-badge">Sistema Multiagente de Desarrollo</div>
+  <div class="cover-title">⚡ OLY<span>MPUS</span></div>
+  <div class="cover-subtitle">Arquitectura de Agentes IA para Desarrollo Full-Stack</div>
+  <div class="cover-divider"></div>
+  <div class="cover-gods">
+    <div class="cover-god-pill zeus-pill">⚡ Zeus — Orquestador</div>
+    <div class="cover-god-pill">☀️ Apollo — Frontend</div>
+    <div class="cover-god-pill">🔨 Hephaestus — UI/Design</div>
+    <div class="cover-god-pill">🪶 Hermes — Backend</div>
+    <div class="cover-god-pill">🌾 Demeter — Database</div>
+    <div class="cover-god-pill">🦉 Athena — Security</div>
+    <div class="cover-god-pill">🏹 Artemis — Testing</div>
+    <div class="cover-god-pill">👑 Hera — Integración</div>
+    <div class="cover-god-pill">🔥 Hestia — Docs & Audit</div>
+    <div class="cover-god-pill">🔱 Poseidon — Infra</div>
+  </div>
+  <div class="cover-meta">CLAUDE OPUS 4.6 · CLAUDE SONNET 4.6 · OPENSPEC OPSX</div>
+  <div class="cover-author">🇨🇴 Hecho desde Colombia con amor &nbsp;·&nbsp; <strong>Jorge Diaz</strong> &lt;bitExploiter&gt;</div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PÁGINA 1 — FILOSOFÍA
+═══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-logo">⚡ OLYM<span>PUS</span></div>
+    <div class="page-num">01 / Filosofía</div>
+  </div>
+
+  <div class="section-tag">Por qué existe este sistema</div>
+  <div class="section-title">La filosofía del Olimpo</div>
+  <div class="section-line"></div>
+
+  <p class="intro-text">
+    El problema central del desarrollo asistido por IA no es la capacidad del modelo — es el <strong>contexto</strong>.
+    Cuando un agente único carga todo el stack (Go + React + DB + Auth + Tests + CI/CD + Design),
+    el contexto se contamina, las instrucciones se diluyen y la precisión cae.
+    <br><br>
+    La solución es <strong>especialización con orquestación inteligente</strong>.
+    Cada dios del Olimpo carga <em>solo las convenciones de su dominio</em>. Zeus, con el razonamiento
+    superior de Opus, entiende la petición completa, la descompone en responsabilidades atómicas
+    y asigna cada una al dios correcto.
+  </p>
+
+  <div class="philosophy-grid">
+    <div class="philosophy-card">
+      <div class="philosophy-num">01</div>
+      <h4>Un dios, un dominio</h4>
+      <p>Ningún agente se sale de su jurisdicción. Si una tarea toca dos dominios, Zeus la divide — no la fusiona. Contexto mínimo = máxima precisión.</p>
+    </div>
+    <div class="philosophy-card">
+      <div class="philosophy-num">02</div>
+      <h4>Zeus no ejecuta, dirige</h4>
+      <p>El orquestador razona, planifica y sintetiza. Nunca escribe código ni toca archivos directamente. Ese es el trabajo de los dioses.</p>
+    </div>
+    <div class="philosophy-card">
+      <div class="philosophy-num">03</div>
+      <h4>Paralelismo cuando aplica</h4>
+      <p>Si Apollo puede construir el componente mientras Hermes construye el endpoint, lo hacen al mismo tiempo. Zeus coordina las dependencias.</p>
+    </div>
+    <div class="philosophy-card">
+      <div class="philosophy-num">04</div>
+      <h4>OpenSpec como lingua franca</h4>
+      <p>El ciclo explore→propose→apply→verify→commit→archive es la única forma válida de trabajar. Los artefactos son el bus de contexto compartido entre todos los dioses.</p>
+    </div>
+    <div class="philosophy-card">
+      <div class="philosophy-num">05</div>
+      <h4>Calidad en tres niveles</h4>
+      <p>Artemis garantiza la calidad por capa (unit + integration). Hera garantiza la integración entre capas (E2E, contratos). Hestia garantiza que todo quede documentado y auditado.</p>
+    </div>
+    <div class="philosophy-card">
+      <div class="philosophy-num">06</div>
+      <h4>Verificación siempre</h4>
+      <p>Zeus nunca cierra una tarea sin confirmación externa: visual en Chrome, curl al endpoint, tests verdes. La regla es para todos los dioses sin excepción.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PÁGINA 2 — DIAGRAMA PRINCIPAL
+═══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-logo">⚡ OLYM<span>PUS</span></div>
+    <div class="page-num">02 / Diagrama General</div>
+  </div>
+
+  <div class="section-tag">Estructura del sistema</div>
+  <div class="section-title">El Olimpo completo</div>
+  <div class="section-line"></div>
+
+  <div class="diagram-wrapper">
+
+    <!-- Zeus -->
+    <div class="diag-zeus">
+      <div class="god-name">⚡ ZEUS</div>
+      <div class="god-model">claude-opus-4-6</div>
+      <div class="god-role">Orquestador · Único punto de contacto con el usuario · Razona · Descompone · Asigna · Sintetiza</div>
+    </div>
+
+    <div class="connector-down"></div>
+
+    <!-- Capa Frontend + Backend -->
+    <div class="layer-label">CAPA DE IMPLEMENTACIÓN</div>
+    <div class="diag-layer diag-layer-3">
+      <!-- Apollo -->
+      <div class="diag-god g-apollo">
+        <div class="god-name">☀️ Apollo</div>
+        <div class="god-domain">Frontend — Lógica de UI y Estado</div>
+        <div class="god-tags">
+          <span class="tag">React 19</span>
+          <span class="tag">Zustand</span>
+          <span class="tag">RHF + Zod</span>
+          <span class="tag">features/</span>
+        </div>
+        <div class="god-model">sonnet-4-6</div>
+      </div>
+
+      <!-- Hermes -->
+      <div class="diag-god g-hermes">
+        <div class="god-name">🪶 Hermes</div>
+        <div class="god-domain">Backend — Go y Python Auxiliar</div>
+        <div class="god-tags">
+          <span class="tag">Handler</span>
+          <span class="tag">Service</span>
+          <span class="tag">Repository</span>
+          <span class="tag">FastAPI</span>
+        </div>
+        <div class="god-model">sonnet-4-6</div>
+      </div>
+
+      <!-- Athena -->
+      <div class="diag-god g-athena">
+        <div class="god-name">🦉 Athena</div>
+        <div class="god-domain">Seguridad, Config y Errores</div>
+        <div class="god-tags">
+          <span class="tag">JWT + RBAC</span>
+          <span class="tag">AppError</span>
+          <span class="tag">Config</span>
+        </div>
+        <div class="god-model">sonnet-4-6</div>
+      </div>
+    </div>
+
+    <div style="height:10px;"></div>
+
+    <div class="diag-layer diag-layer-3">
+      <!-- Hephaestus -->
+      <div class="diag-god g-hephaestus">
+        <div class="god-name">🔨 Hephaestus</div>
+        <div class="god-domain">UI/Design — Componentes Visuales</div>
+        <div class="god-tags">
+          <span class="tag">shadcn/ui</span>
+          <span class="tag">Tailwind 4</span>
+          <span class="tag">Stitch</span>
+        </div>
+        <div class="god-model">sonnet-4-6</div>
+      </div>
+
+      <!-- Demeter -->
+      <div class="diag-god g-demeter">
+        <div class="god-name">🌾 Demeter</div>
+        <div class="god-domain">Base de Datos y Acceso a Datos</div>
+        <div class="god-tags">
+          <span class="tag">PostgreSQL</span>
+          <span class="tag">PostGIS</span>
+          <span class="tag">GORM</span>
+          <span class="tag">Migrations</span>
+        </div>
+        <div class="god-model">sonnet-4-6</div>
+      </div>
+
+      <!-- Poseidon -->
+      <div class="diag-god g-poseidon">
+        <div class="god-name">🔱 Poseidon</div>
+        <div class="god-domain">Infraestructura y CI/CD</div>
+        <div class="god-tags">
+          <span class="tag">Docker</span>
+          <span class="tag">GH Actions</span>
+          <span class="tag">Deploy</span>
+        </div>
+        <div class="god-model">sonnet-4-6</div>
+      </div>
+    </div>
+
+    <div class="connector-down"></div>
+
+    <!-- Capa QA por dominio -->
+    <div class="layer-label">CAPA DE CALIDAD POR DOMINIO</div>
+    <div class="diag-layer diag-layer-2">
+      <div class="diag-god g-artemis">
+        <div class="god-name">🏹 Artemis — Frontend QA</div>
+        <div class="god-domain">Tests unitarios de componentes, stores, schemas. Vitest + RTL + MSW.</div>
+        <div class="god-model">sonnet-4-6</div>
+      </div>
+      <div class="diag-god g-artemis">
+        <div class="god-name">🏹 Artemis — Backend QA</div>
+        <div class="god-domain">Tests de endpoints Go, table-driven, testcontainers con DB real.</div>
+        <div class="god-model">sonnet-4-6</div>
+      </div>
+    </div>
+
+    <div class="connector-down"></div>
+
+    <!-- Hera -->
+    <div class="layer-label">CAPA DE INTEGRACIÓN — SEÑAL DE DONE</div>
+    <div class="diag-god g-hera hera-highlight" style="margin-bottom:10px;">
+      <div class="god-name">👑 HERA — Integration QA</div>
+      <div class="god-domain">Valida que frontend y backend se integran correctamente. Contratos de API, flujos E2E con Playwright, manejo de errores en la unión de capas. <strong style="color:rgba(255,100,150,0.9)">Emite la señal DONE a Zeus.</strong></div>
+      <div class="god-model">sonnet-4-6</div>
+    </div>
+
+    <!-- Hestia (lateral) -->
+    <div class="layer-label">TRANSVERSAL — CORRE EN PARALELO CON TODOS</div>
+    <div class="diag-god g-hestia">
+      <div class="god-name">🔥 HESTIA — Docs & Audit</div>
+      <div class="god-domain">Documentación de funciones, endpoints, decisiones de arquitectura. Auditoría de seguridad y patrones del stack. Garantiza que el código cumple lo que el change prometía.</div>
+      <div class="god-model">sonnet-4-6</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PÁGINA 3 — FICHA DE CADA DIOS (1/2)
+═══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-logo">⚡ OLYM<span>PUS</span></div>
+    <div class="page-num">03 / Los Dioses (1/2)</div>
+  </div>
+
+  <div class="section-tag">Especificación de agentes</div>
+  <div class="section-title">Zeus, Apollo, Hephaestus, Hermes</div>
+  <div class="section-line"></div>
+
+  <div class="gods-grid">
+
+    <!-- Zeus -->
+    <div class="god-card">
+      <div class="god-card-header hc-zeus">
+        <div class="god-avatar">⚡</div>
+        <div>
+          <div class="god-card-name">Zeus</div>
+          <div class="god-card-role">Orquestador — claude-opus-4-6</div>
+        </div>
+      </div>
+      <div class="god-card-body">
+        <p>Único punto de contacto con el usuario. Recibe la petición en lenguaje natural, la descompone por dominio, asigna tareas a los dioses correctos en el orden correcto, sintetiza los resultados y reporta al usuario.</p>
+        <ul class="god-responsibilities">
+          <li>Analizar la petición y definir el criterio de éxito</li>
+          <li>Crear el OpenSpec change con todos los artefactos</li>
+          <li>Coordinar dependencias y paralelismo entre dioses</li>
+          <li>Briefear a cada dios con su tarea específica + specs.md</li>
+          <li>Verificar el resultado final (Chrome, curl, tests)</li>
+          <li>Emitir el reporte de cierre al usuario</li>
+        </ul>
+        <div class="god-files">
+          <span class="god-file-tag">CLAUDE.md</span>
+          <span class="god-file-tag">PRD.md</span>
+          <span class="god-file-tag">OLYMPUS.md</span>
+          <span class="god-file-tag">openspec.md</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Apollo -->
+    <div class="god-card">
+      <div class="god-card-header hc-apollo">
+        <div class="god-avatar">☀️</div>
+        <div>
+          <div class="god-card-name">Apollo</div>
+          <div class="god-card-role">Frontend Logic — claude-sonnet-4-6</div>
+        </div>
+      </div>
+      <div class="god-card-body">
+        <p>Dios de la lógica de interfaz. Maneja React 19 con sus nuevos hooks, estado global con Zustand y formularios schema-first con React Hook Form + Zod. Organiza el código en la estructura <code>features/&lt;dominio&gt;/</code>.</p>
+        <ul class="god-responsibilities">
+          <li>Componentes en <code>features/&lt;dominio&gt;/components/</code></li>
+          <li>Stores Zustand en <code>features/&lt;dominio&gt;/store.ts</code></li>
+          <li>Schemas Zod + tipos derivados en <code>schemas.ts</code></li>
+          <li>Hooks del feature en <code>hooks/</code></li>
+          <li>Servicios de fetch en <code>services/</code></li>
+          <li>Integración React Hook Form con validación Zod</li>
+        </ul>
+        <div class="god-files">
+          <span class="god-file-tag">react.md</span>
+          <span class="god-file-tag">zustand.md</span>
+          <span class="god-file-tag">react-hook-form.md</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hephaestus -->
+    <div class="god-card">
+      <div class="god-card-header hc-heph">
+        <div class="god-avatar">🔨</div>
+        <div>
+          <div class="god-card-name">Hephaestus</div>
+          <div class="god-card-role">UI / Design — claude-sonnet-4-6</div>
+        </div>
+      </div>
+      <div class="god-card-body">
+        <p>El artesano visual. Compone primitivos shadcn/ui sin modificarlos, aplica Tailwind 4 con tokens semánticos mobile-first y ejecuta el flujo CDD de Stitch: schema → API → prompt → diseño → adaptación al stack.</p>
+        <ul class="god-responsibilities">
+          <li>Instalar y configurar componentes shadcn/ui</li>
+          <li>Componentes de dominio encima de primitivos</li>
+          <li>Sistema de diseño con tokens Tailwind (colores, spacing)</li>
+          <li>Flujo Stitch completo para pantallas nuevas</li>
+          <li>Adaptar código exportado de Stitch al stack real</li>
+          <li>Dark mode, responsive, accesibilidad base</li>
+        </ul>
+        <div class="god-files">
+          <span class="god-file-tag">shadcn.md</span>
+          <span class="god-file-tag">tailwind.md</span>
+          <span class="god-file-tag">stitch.md</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hermes -->
+    <div class="god-card">
+      <div class="god-card-header hc-hermes">
+        <div class="god-avatar">🪶</div>
+        <div>
+          <div class="god-card-name">Hermes</div>
+          <div class="god-card-role">Backend Go + Python — claude-sonnet-4-6</div>
+        </div>
+      </div>
+      <div class="god-card-body">
+        <p>Mensajero del backend. Arquitectura en tres capas estrictas: el handler no tiene lógica, el service no sabe de HTTP, el repository no tiene reglas de negocio. También gestiona microservicios Python con FastAPI + Pydantic.</p>
+        <ul class="god-responsibilities">
+          <li>Handlers HTTP en <code>internal/handler/</code></li>
+          <li>Services en <code>internal/service/</code></li>
+          <li>Repositories en <code>internal/repository/</code></li>
+          <li>Middlewares en <code>internal/middleware/</code></li>
+          <li>Microservicios Python (geo, ETL, scripts)</li>
+          <li>Logging estructurado con <code>slog</code></li>
+        </ul>
+        <div class="god-files">
+          <span class="god-file-tag">go.md</span>
+          <span class="god-file-tag">python.md</span>
+          <span class="god-file-tag">api.md</span>
+          <span class="god-file-tag">logging.md</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PÁGINA 4 — FICHA DE CADA DIOS (2/2)
+═══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-logo">⚡ OLYM<span>PUS</span></div>
+    <div class="page-num">04 / Los Dioses (2/2)</div>
+  </div>
+
+  <div class="section-tag">Especificación de agentes</div>
+  <div class="section-title">Demeter, Athena, Artemis, Hera, Hestia, Poseidon</div>
+  <div class="section-line"></div>
+
+  <div class="gods-grid">
+
+    <!-- Demeter -->
+    <div class="god-card">
+      <div class="god-card-header hc-demeter">
+        <div class="god-avatar">🌾</div>
+        <div>
+          <div class="god-card-name">Demeter</div>
+          <div class="god-card-role">Base de Datos — claude-sonnet-4-6</div>
+        </div>
+      </div>
+      <div class="god-card-body">
+        <p>Guardiana de la tierra donde viven los datos. Define el schema, las migraciones, los modelos GORM y el acceso a datos. El schema que define Demeter es el contrato del que dependen todos los demás dioses.</p>
+        <ul class="god-responsibilities">
+          <li>Schema: tablas, columnas, constraints, índices</li>
+          <li>Migraciones SQL: <code>up.sql</code> y <code>down.sql</code></li>
+          <li>Modelos GORM en <code>internal/model/</code></li>
+          <li>Repository pattern por entidad</li>
+          <li>Scopes GORM para queries reutilizables</li>
+          <li>Tipos geoespaciales PostGIS (ST_*, Point, Polygon)</li>
+        </ul>
+        <div class="god-files">
+          <span class="god-file-tag">postgresql-postgis.md</span>
+          <span class="god-file-tag">gorm.md</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Athena -->
+    <div class="god-card">
+      <div class="god-card-header hc-athena">
+        <div class="god-avatar">🦉</div>
+        <div>
+          <div class="god-card-name">Athena</div>
+          <div class="god-card-role">Seguridad & Config — claude-sonnet-4-6</div>
+        </div>
+      </div>
+      <div class="god-card-body">
+        <p>Diosa de la sabiduría y la estrategia. Ningún endpoint se expone sin su validación. JWT con access (15 min) + refresh (7 días, rotación obligatoria), RBAC con permisos <code>recurso:acción</code>, errores tipados y configuración fail-fast.</p>
+        <ul class="god-responsibilities">
+          <li>Middleware JWT en <code>internal/middleware/auth.go</code></li>
+          <li>RBAC y verificación de permisos</li>
+          <li>Rotación de refresh tokens</li>
+          <li><code>AppError</code> tipados en <code>internal/apperror/</code></li>
+          <li>Configuración tipada, fail fast al arranque</li>
+          <li>CORS, bcrypt cost 12+, rate limiting</li>
+        </ul>
+        <div class="god-files">
+          <span class="god-file-tag">auth.md</span>
+          <span class="god-file-tag">error-handling.md</span>
+          <span class="god-file-tag">config.md</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Artemis -->
+    <div class="god-card">
+      <div class="god-card-header hc-artemis">
+        <div class="god-avatar">🏹</div>
+        <div>
+          <div class="god-card-name">Artemis (×2)</div>
+          <div class="god-card-role">QA por Capa — claude-sonnet-4-6</div>
+        </div>
+      </div>
+      <div class="god-card-body">
+        <p>Cazadora de bugs dentro de cada dominio. Existe como dos instancias independientes: una al lado del frontend (Apollo + Hephaestus) y otra al lado del backend (Hermes + Demeter + Athena).</p>
+        <ul class="god-responsibilities">
+          <li>Frontend: Vitest + RTL, comportamiento no implementación</li>
+          <li>Frontend: schemas Zod, stores Zustand, hooks</li>
+          <li>Frontend: MSW para mock de APIs a nivel de red</li>
+          <li>Backend: <code>go test</code> table-driven en handlers/services</li>
+          <li>Backend: testcontainers con DB real (no mocks)</li>
+          <li>Cobertura: identifica lógica crítica sin tests</li>
+        </ul>
+        <div class="god-files">
+          <span class="god-file-tag">testing.md</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hera -->
+    <div class="god-card">
+      <div class="god-card-header hc-hera">
+        <div class="god-avatar">👑</div>
+        <div>
+          <div class="god-card-name">Hera</div>
+          <div class="god-card-role">Integration QA — claude-sonnet-4-6</div>
+        </div>
+      </div>
+      <div class="god-card-body">
+        <p>Reina que garantiza la armonía entre capas. Entra cuando Artemis frontend y Artemis backend han dado el visto bueno. Su misión: asegurar que la integración entre Apollo y Hermes es correcta y <strong>emitir la señal DONE a Zeus</strong>.</p>
+        <ul class="god-responsibilities">
+          <li>Validar contratos de API (shape, tipos, códigos de error)</li>
+          <li>Flujos E2E con Playwright en flujos críticos</li>
+          <li>Errores en la unión: ¿el frontend maneja lo que manda el backend?</li>
+          <li>Tipos compartidos: ¿Zod y Go concuerdan?</li>
+          <li>Auth en integración: JWT → middleware → respuesta</li>
+          <li><strong>Notificar a Zeus: feature DONE ✓</strong></li>
+        </ul>
+        <div class="god-files">
+          <span class="god-file-tag">testing.md</span>
+          <span class="god-file-tag">api.md</span>
+          <span class="god-file-tag">error-handling.md</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hestia -->
+    <div class="god-card">
+      <div class="god-card-header hc-hestia">
+        <div class="god-avatar">🔥</div>
+        <div>
+          <div class="god-card-name">Hestia</div>
+          <div class="god-card-role">Docs & Audit — claude-sonnet-4-6</div>
+        </div>
+      </div>
+      <div class="god-card-body">
+        <p>Guardiana del hogar y el fuego sagrado del proyecto. Corre en paralelo con todos los demás dioses. No bloquea el flujo — audita y documenta mientras la implementación avanza y reporta a Zeus al final.</p>
+        <ul class="god-responsibilities">
+          <li>Documentación inline: funciones, endpoints, tipos</li>
+          <li>Documenta decisiones de arquitectura del change</li>
+          <li>Auditoría de seguridad: ¿se cumplen los patrones de auth.md?</li>
+          <li>Auditoría de patrones: ¿el código respeta las convenciones IA/?</li>
+          <li>Actualización de README y docs del proyecto</li>
+          <li>Reporte final a Zeus: cumplimiento ✓ / desvíos encontrados</li>
+        </ul>
+        <div class="god-files">
+          <span class="god-file-tag">auth.md</span>
+          <span class="god-file-tag">api.md</span>
+          <span class="god-file-tag">go.md</span>
+          <span class="god-file-tag">react.md</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Poseidon -->
+    <div class="god-card">
+      <div class="god-card-header hc-poseidon">
+        <div class="god-avatar">🔱</div>
+        <div>
+          <div class="god-card-name">Poseidon</div>
+          <div class="god-card-role">Infraestructura — claude-sonnet-4-6</div>
+        </div>
+      </div>
+      <div class="god-card-body">
+        <p>Dios de los mares y la infraestructura. Controla los contenedores Docker, los workflows de GitHub Actions y la estrategia de ramas. Se activa cuando hay cambios que afectan el entorno de ejecución o el pipeline.</p>
+        <ul class="god-responsibilities">
+          <li><code>Dockerfile</code> multi-stage (builder + runtime mínimo)</li>
+          <li><code>docker-compose.yml</code> con healthchecks</li>
+          <li>GitHub Actions: CI (lint, type-check, test, build)</li>
+          <li>GitHub Actions: CD (auto a testing, approval a prod)</li>
+          <li>GitHub Environments y protección de ramas</li>
+          <li>Scripts de rollback y variables por entorno</li>
+        </ul>
+        <div class="god-files">
+          <span class="god-file-tag">docker.md</span>
+          <span class="god-file-tag">github.md</span>
+          <span class="god-file-tag">deployment.md</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PÁGINA 5 — OPENSPEC COMO BUS DE CONTEXTO
+═══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-logo">⚡ OLYM<span>PUS</span></div>
+    <div class="page-num">05 / OpenSpec como Bus de Contexto</div>
+  </div>
+
+  <div class="section-tag">Contexto compartido entre agentes</div>
+  <div class="section-title">OpenSpec garantiza la coherencia</div>
+  <div class="section-line"></div>
+
+  <p class="intro-text">
+    El desafío de un sistema multiagente es que cada dios trabaja con contexto especializado.
+    Sin un mecanismo de sincronización, Hermes puede construir un endpoint con una forma distinta
+    a la que Apollo espera. <strong>Los artefactos de OpenSpec son el bus de contexto compartido que elimina esa ambigüedad.</strong>
+  </p>
+
+  <div class="rule-box">
+    <h4>⚡ La Regla de Oro</h4>
+    <p><strong>Ningún dios empieza a ejecutar sin un OpenSpec change activo con <code>specs.md</code> aprobado por Zeus.</strong>
+    <code>specs.md</code> es el contrato. Hermes lo implementa por el lado del servidor. Apollo por el lado del cliente.
+    Hera lo usa para validar que ambos lados lo honraron. Hestia lo convierte en documentación permanente.</p>
+  </div>
+
+  <div class="artifacts-box">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:3px;color:rgba(201,168,76,0.8);margin-bottom:20px;text-transform:uppercase;">Los 4 Artefactos del Change</div>
+
+    <div class="artifact-row">
+      <div class="artifact-file">📋 proposal.md</div>
+      <div>
+        <div class="artifact-desc">Qué se construye y por qué. La motivación, el alcance y los criterios de éxito del change.</div>
+        <div class="artifact-row-consumers">
+          <span class="consumer-tag ct-zeus">Zeus</span>
+          <span class="consumer-tag ct-hestia">Hestia (documenta el "por qué")</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="artifact-row">
+      <div class="artifact-file">📐 specs.md</div>
+      <div>
+        <div class="artifact-desc">El contrato técnico completo: endpoints exactos, schemas de DB, tipos compartidos, códigos de error y su forma JSON.</div>
+        <div class="artifact-row-consumers">
+          <span class="consumer-tag ct-hermes">Hermes</span>
+          <span class="consumer-tag ct-apollo">Apollo</span>
+          <span class="consumer-tag ct-demeter">Demeter</span>
+          <span class="consumer-tag ct-athena">Athena</span>
+          <span class="consumer-tag ct-artemis">Artemis</span>
+          <span class="consumer-tag ct-hera">Hera</span>
+          <span class="consumer-tag ct-hestia">Hestia</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="artifact-row">
+      <div class="artifact-file">🎨 design.md</div>
+      <div>
+        <div class="artifact-desc">Prompt de Stitch informado por specs + wireframe. Solo cuando hay UI nueva. Schema → API → Prompt → Diseño.</div>
+        <div class="artifact-row-consumers">
+          <span class="consumer-tag ct-heph">Hephaestus</span>
+          <span class="consumer-tag ct-apollo">Apollo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="artifact-row">
+      <div class="artifact-file">✅ tasks.md</div>
+      <div>
+        <div class="artifact-desc">Lista de tareas asignadas por dios con definición de hecho medible. Un checkbox por tarea concreta y verificable.</div>
+        <div class="artifact-row-consumers">
+          <span class="consumer-tag ct-zeus">Zeus (asigna)</span>
+          <span class="consumer-tag ct-artemis">Artemis (valida)</span>
+          <span class="consumer-tag ct-hera">Hera (valida integración)</span>
+          <span class="consumer-tag ct-hestia">Hestia (audita cumplimiento)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-steps" style="margin-top:28px;">
+    <div class="flow-step">
+      <div class="flow-step-num">1</div>
+      <div class="flow-step-content">
+        <h4>/opsx:explore — Zeus asigna al dios experto del área</h4>
+        <p>Antes de proponer nada, Zeus convoca al dios que conoce el área afectada para que explore el código existente y reporte qué hay, qué falta y qué puede colisionar.</p>
+      </div>
+    </div>
+    <div class="flow-connector"></div>
+    <div class="flow-step">
+      <div class="flow-step-num">2</div>
+      <div class="flow-step-content">
+        <h4>/opsx:propose — Zeus crea el change con los 4 artefactos</h4>
+        <p>Con el resultado del explore, Zeus redacta <code>proposal.md</code>, <code>specs.md</code>, <code>design.md</code> (si aplica) y <code>tasks.md</code>. Todos los dioses que van a trabajar reciben <code>specs.md</code> en su briefing.</p>
+      </div>
+    </div>
+    <div class="flow-connector"></div>
+    <div class="flow-step">
+      <div class="flow-step-num">3</div>
+      <div class="flow-step-content">
+        <h4>/opsx:apply — Cada dios ejecuta su sección de tasks.md</h4>
+        <p>Zeus briefea a cada dios: su tarea específica + <code>specs.md</code> completo + sus archivos IA/. Los dioses sin dependencias entre sí ejecutan en paralelo.</p>
+      </div>
+    </div>
+    <div class="flow-connector"></div>
+    <div class="flow-step">
+      <div class="flow-step-num">4</div>
+      <div class="flow-step-content">
+        <h4>Artemis valida + Hera integra + Hestia audita</h4>
+        <p>Artemis verifica contra <code>specs.md</code> que cada capa implementó lo que prometía. Hera valida la integración de punta a punta. Hestia audita documentación y seguridad.</p>
+      </div>
+    </div>
+    <div class="flow-connector"></div>
+    <div class="flow-step">
+      <div class="flow-step-num">5</div>
+      <div class="flow-step-content">
+        <h4>Commit + /opsx:archive — Zeus cierra el ciclo</h4>
+        <p>Un commit semántico por capa lógica. Zeus archiva el change. Hera ha emitido la señal DONE. Zeus reporta al usuario el resumen completo: qué se hizo, qué se verificó, qué quedó pendiente.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PÁGINA 6 — FLUJO FEATURE COMPLETO
+═══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-logo">⚡ OLYM<span>PUS</span></div>
+    <div class="page-num">06 / Flujo de Trabajo</div>
+  </div>
+
+  <div class="section-tag">Ejemplo end-to-end</div>
+  <div class="section-title">Feature completo: módulo de usuarios con auth</div>
+  <div class="section-line"></div>
+
+  <div class="feature-flow">
+    <div class="ff-title">Zeus recibe: "Quiero un módulo de gestión de usuarios con roles admin y user"</div>
+
+    <!-- Fase 1 -->
+    <div class="ff-phase">
+      <div class="ff-phase-label">FASE 1<br>Datos</div>
+      <div>
+        <div class="ff-agents">
+          <div class="ff-agent" style="background:rgba(122,107,61,0.3);color:#D4C490;">🌾 Demeter</div>
+        </div>
+        <div class="ff-desc" style="margin-top:6px;">Schema: tabla <code style="color:#90EEC0">users</code>, roles, permisos. Migración SQL up/down. Modelo GORM. Repository pattern.<br><em style="color:rgba(255,255,255,0.35)">El schema define el contrato — todos los demás dependen de este paso.</em></div>
+      </div>
+    </div>
+
+    <div class="ff-connector-v"></div>
+
+    <!-- Fase 2 -->
+    <div class="ff-phase">
+      <div class="ff-phase-label">FASE 2<br>Backend<br>(paralelo)</div>
+      <div>
+        <div class="ff-agents">
+          <div class="ff-agent" style="background:rgba(74,111,165,0.3);color:#A0C0E8;">🦉 Athena</div>
+          <div class="ff-agent" style="background:rgba(59,178,115,0.3);color:#90EEC0;">🪶 Hermes</div>
+        </div>
+        <div class="ff-desc" style="margin-top:6px;">
+          <strong style="color:rgba(255,255,255,0.7)">Athena:</strong> AppErrors para users, RBAC (users:read, users:write, users:delete), middleware de rol.<br>
+          <strong style="color:rgba(255,255,255,0.7)">Hermes:</strong> Handler/Service/Repository CRUD. Endpoints: GET/POST/PATCH/DELETE <code style="color:#90EEC0">/users</code>.
+        </div>
+      </div>
+    </div>
+
+    <div class="ff-connector-v"></div>
+
+    <!-- Fase 3 -->
+    <div class="ff-phase">
+      <div class="ff-phase-label">FASE 3<br>Frontend<br>(paralelo)</div>
+      <div>
+        <div class="ff-agents">
+          <div class="ff-agent" style="background:rgba(46,134,171,0.3);color:#90D0EE;">☀️ Apollo</div>
+          <div class="ff-agent" style="background:rgba(224,122,95,0.3);color:#FFB0A0;">🔨 Hephaestus</div>
+        </div>
+        <div class="ff-desc" style="margin-top:6px;">
+          <strong style="color:rgba(255,255,255,0.7)">Apollo:</strong> Store Zustand, Schema Zod, servicios de fetch, hooks del feature.<br>
+          <strong style="color:rgba(255,255,255,0.7)">Hephaestus:</strong> UserTable, UserForm, UserBadge (roles). Flujo Stitch informado por specs.md.
+        </div>
+      </div>
+    </div>
+
+    <div class="ff-connector-v"></div>
+
+    <!-- Fase 4 -->
+    <div class="ff-phase">
+      <div class="ff-phase-label">FASE 4<br>QA Capa<br>(paralelo)</div>
+      <div>
+        <div class="ff-agents">
+          <div class="ff-agent" style="background:rgba(92,107,192,0.3);color:#B0B8F0;">🏹 Artemis Frontend</div>
+          <div class="ff-agent" style="background:rgba(92,107,192,0.3);color:#B0B8F0;">🏹 Artemis Backend</div>
+          <div class="ff-agent" style="background:rgba(255,112,67,0.3);color:#FFB090;">🔥 Hestia</div>
+        </div>
+        <div class="ff-desc" style="margin-top:6px;">
+          Artemis (frontend): tests de componentes, store, schemas Zod, MSW.<br>
+          Artemis (backend): go test table-driven, testcontainers DB real.<br>
+          Hestia: documenta endpoints, tipos, decisiones. Audita seguridad y patrones.
+        </div>
+      </div>
+    </div>
+
+    <div class="ff-connector-v"></div>
+
+    <!-- Fase 5 -->
+    <div class="ff-phase">
+      <div class="ff-phase-label">FASE 5<br>Integración</div>
+      <div>
+        <div class="ff-agents">
+          <div class="ff-agent" style="background:rgba(194,24,91,0.3);color:#FF80AB;border:1px solid rgba(194,24,91,0.5);">👑 Hera</div>
+        </div>
+        <div class="ff-desc" style="margin-top:6px;">
+          Valida contratos API, flujos E2E completos (login → crear usuario → asignar rol → verificar permisos).
+          ¿El Zod schema del frontend coincide con lo que manda Hermes?
+          ¿Los errores de Athena se manejan en el frontend?
+          <br><strong style="color:rgba(255,100,150,0.9)">→ Emite señal DONE a Zeus ✓</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="ff-connector-v"></div>
+
+    <!-- Fase 6 -->
+    <div class="ff-phase">
+      <div class="ff-phase-label">FASE 6<br>Infra</div>
+      <div>
+        <div class="ff-agents">
+          <div class="ff-agent" style="background:rgba(0,131,143,0.3);color:#80D8E0;">🔱 Poseidon</div>
+        </div>
+        <div class="ff-desc" style="margin-top:6px;">
+          Verificar variables de entorno en CI/CD. Actualizar docker-compose si hay nuevo servicio.
+          Confirmar que el pipeline incluye los nuevos tests. Commit + PR a <code style="color:#80D8E0">testing</code>.
+        </div>
+      </div>
+    </div>
+
+    <div class="ff-connector-v"></div>
+
+    <!-- Zeus cierra -->
+    <div class="ff-phase">
+      <div class="ff-phase-label">CIERRE</div>
+      <div>
+        <div class="ff-agents">
+          <div class="ff-agent" style="background:rgba(123,47,190,0.3);color:#D4AAFF;border:1px solid rgba(123,47,190,0.5);">⚡ Zeus</div>
+        </div>
+        <div class="ff-desc" style="margin-top:6px;">
+          Commits semánticos por capa. /opsx:archive. Reporte final al usuario:
+          qué se hizo, qué se verificó, qué quedó pendiente.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PÁGINA 7 — TABLA RESUMEN + ANTI-PATRONES
+═══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-logo">⚡ OLYM<span>PUS</span></div>
+    <div class="page-num">07 / Referencia Rápida</div>
+  </div>
+
+  <div class="section-tag">Referencia rápida</div>
+  <div class="section-title">Los 10 dioses del Olimpo</div>
+  <div class="section-line"></div>
+
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>Dios</th>
+        <th>Modelo</th>
+        <th>Dominio</th>
+        <th>Archivos IA/</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="god-dot" style="background:#7B2FBE;"></span><strong>⚡ Zeus</strong></td>
+        <td><span class="model-badge model-opus">opus-4-6</span></td>
+        <td>Orquestador — único punto de contacto</td>
+        <td><span class="god-file-tag">CLAUDE.md</span> <span class="god-file-tag">PRD.md</span> <span class="god-file-tag">OLYMPUS.md</span></td>
+      </tr>
+      <tr>
+        <td><span class="god-dot" style="background:#2E86AB;"></span><strong>☀️ Apollo</strong></td>
+        <td><span class="model-badge model-sonnet">sonnet-4-6</span></td>
+        <td>Frontend — lógica de UI y estado</td>
+        <td><span class="god-file-tag">react.md</span> <span class="god-file-tag">zustand.md</span> <span class="god-file-tag">react-hook-form.md</span></td>
+      </tr>
+      <tr>
+        <td><span class="god-dot" style="background:#E07A5F;"></span><strong>🔨 Hephaestus</strong></td>
+        <td><span class="model-badge model-sonnet">sonnet-4-6</span></td>
+        <td>UI/Design — componentes visuales</td>
+        <td><span class="god-file-tag">shadcn.md</span> <span class="god-file-tag">tailwind.md</span> <span class="god-file-tag">stitch.md</span></td>
+      </tr>
+      <tr>
+        <td><span class="god-dot" style="background:#3BB273;"></span><strong>🪶 Hermes</strong></td>
+        <td><span class="model-badge model-sonnet">sonnet-4-6</span></td>
+        <td>Backend — Go + Python auxiliar</td>
+        <td><span class="god-file-tag">go.md</span> <span class="god-file-tag">python.md</span> <span class="god-file-tag">api.md</span> <span class="god-file-tag">logging.md</span></td>
+      </tr>
+      <tr>
+        <td><span class="god-dot" style="background:#7A6B3D;"></span><strong>🌾 Demeter</strong></td>
+        <td><span class="model-badge model-sonnet">sonnet-4-6</span></td>
+        <td>Base de datos — schema y acceso</td>
+        <td><span class="god-file-tag">postgresql-postgis.md</span> <span class="god-file-tag">gorm.md</span></td>
+      </tr>
+      <tr>
+        <td><span class="god-dot" style="background:#4A6FA5;"></span><strong>🦉 Athena</strong></td>
+        <td><span class="model-badge model-sonnet">sonnet-4-6</span></td>
+        <td>Seguridad, config y errores</td>
+        <td><span class="god-file-tag">auth.md</span> <span class="god-file-tag">error-handling.md</span> <span class="god-file-tag">config.md</span></td>
+      </tr>
+      <tr>
+        <td><span class="god-dot" style="background:#5C6BC0;"></span><strong>🏹 Artemis ×2</strong></td>
+        <td><span class="model-badge model-sonnet">sonnet-4-6</span></td>
+        <td>QA por capa — frontend / backend</td>
+        <td><span class="god-file-tag">testing.md</span></td>
+      </tr>
+      <tr>
+        <td><span class="god-dot" style="background:#C2185B;"></span><strong>👑 Hera</strong></td>
+        <td><span class="model-badge model-sonnet">sonnet-4-6</span></td>
+        <td>Integration QA — señal de DONE</td>
+        <td><span class="god-file-tag">testing.md</span> <span class="god-file-tag">api.md</span> <span class="god-file-tag">error-handling.md</span></td>
+      </tr>
+      <tr>
+        <td><span class="god-dot" style="background:#FF7043;"></span><strong>🔥 Hestia</strong></td>
+        <td><span class="model-badge model-sonnet">sonnet-4-6</span></td>
+        <td>Docs & Audit — transversal</td>
+        <td><span class="god-file-tag">auth.md</span> <span class="god-file-tag">api.md</span> <span class="god-file-tag">go.md</span> <span class="god-file-tag">react.md</span></td>
+      </tr>
+      <tr>
+        <td><span class="god-dot" style="background:#00838F;"></span><strong>🔱 Poseidon</strong></td>
+        <td><span class="model-badge model-sonnet">sonnet-4-6</span></td>
+        <td>Infraestructura — Docker, CI/CD</td>
+        <td><span class="god-file-tag">docker.md</span> <span class="god-file-tag">github.md</span> <span class="god-file-tag">deployment.md</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:32px;">
+    <div class="section-tag">Qué no hacer</div>
+    <div class="section-title" style="font-size:24px;">Anti-patrones del sistema</div>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="anti-grid">
+    <div class="anti-card">
+      <div class="anti-bad">❌ El usuario habla directo con Apollo o Hermes</div>
+      <div class="anti-why">Zeus es el único punto de entrada. Siempre. Los dioses no tienen interfaz pública.</div>
+    </div>
+    <div class="anti-card">
+      <div class="anti-bad">❌ Zeus escribe código</div>
+      <div class="anti-why">Zeus razona y coordina. El código lo escriben los dioses. Zeus que implementa es Zeus que pierde capacidad de orquestación.</div>
+    </div>
+    <div class="anti-card">
+      <div class="anti-bad">❌ Un dios carga todos los archivos IA/</div>
+      <div class="anti-why">El contexto especializado es el punto. Cada dios carga solo lo suyo. Si Apollo carga go.md, contamina su contexto.</div>
+    </div>
+    <div class="anti-card">
+      <div class="anti-bad">❌ Hera valida sin que Artemis haya pasado</div>
+      <div class="anti-why">El orden importa: Artemis valida por capas primero. Hera valida la integración. No se puede saltar la QA por capa.</div>
+    </div>
+    <div class="anti-card">
+      <div class="anti-bad">❌ Ejecutar sin specs.md aprobado</div>
+      <div class="anti-why">Sin el contrato técnico, Hermes y Apollo implementan algo diferente. specs.md es obligatorio antes de cualquier apply.</div>
+    </div>
+    <div class="anti-card">
+      <div class="anti-bad">❌ Hestia bloquea el flujo</div>
+      <div class="anti-why">Hestia es transversal — corre en paralelo, no en secuencia. Nunca debe ser un cuello de botella entre fases.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
